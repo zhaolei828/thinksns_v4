@@ -1,0 +1,79 @@
+<include file="../Public/_cat_header"/>
+<script type="text/javascript" charset="utf-8" src="__APP__/ueditor/editor_config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__APP__/ueditor/editor_all_min.js"></script>
+<link href="__APP__/center.css" type="text/css" rel="stylesheet">
+<div id="page-wrap">
+    <div id="main-wrap">
+        <include file="../Public/_navbar"/>
+
+        <div class="mb10 clearfix left  mr10" style="width: 190px">
+
+            <include file="./_left"/>
+        </div>
+    </div>
+    <div class="left c_panel" style="width: 760px">
+        <ul class="cat_m_entitys">
+            <li>
+                <a  href="{:U('cat/Center/rec')}">收到的信息</a>
+            </li>
+            <li><a href="{:U('cat/Center/send')}">发送的信息</a></li>
+            <li class="splitter"></li>
+            <li><a class="current" href="{:U('cat/Center/post')}">发送信息</a></li>
+        </ul>
+
+        <div class="clearfix"></div>
+        <div class="underline_x"></div>
+        <div class=" mb10" style="width: 698px;border-top: 1px solid #ccc">
+            <form id="frm_main" action="{:U('cat/Center/_doSendInfo')}" method="post">
+                <div class="mg30">
+                    <h2>选择接收者</h2>
+
+                    <div>
+                        <div>{:W('SearchUser',array('name'=>'rec_uids'))}</div>
+                    </div>
+                    <div class="clearfix mb10"></div>
+                    <h2>选择信息</h2>
+
+                    <div>
+                        <div class="c_d_s_entitys left w100px mr10">
+                            <ul class="c_ul_s_entitys">
+                                <volist name="entitys" id="vo">
+                                    <li
+                                    <if condition="$i eq 1">class="c_ul_s_active"</if>
+                                    ><a onclick="get_Infos(this,{$vo.entity_id})">{$vo.alias}</a></li>
+                                </volist>
+                            </ul>
+                        </div>
+                        <div class=" c_d_s_infos left " style="width: 520px;">
+                            <ul class="c_ul_s_infos">
+                                <volist name="first_infos" id="vo">
+                                    <li>
+                                        <a onclick="set_selected(this,{$vo.info_id})">{$vo.info_id|getInfoFirstValue} </a>
+                                    </li>
+                                </volist>
+                            </ul>
+                        </div>
+                        <div class="clearfix mb10"></div>
+                    </div>
+                    <input id="hd_info_id" name="info_id" type="hidden" value="0">
+
+                    <h2>输入附言</h2>
+
+                    <div class="mb10">
+                        {:W('UEditor',array('name'=>'content','id'=>'editor'))}
+                    </div>
+                    <div class=""><a event-node="post_info" class="cat_btn_post">发送</a></div>
+                </div>
+
+            </form>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<style>
+
+</style>
+</div>
+</div>
+<script></script>
+<include file="__THEME__/public_footer"/>

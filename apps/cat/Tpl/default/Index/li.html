@@ -1,0 +1,97 @@
+<include file="../Public/_cat_header"/>
+<div id="page-wrap">
+    <div id="main-wrap">
+        <!--导航栏-->
+        <include file="../Public/_navbar"/>
+        <!--导航栏end-->
+        <div class="mb10 clearfix">
+            <div class="hideRoll" style="display: none">
+                <h1 class="cat_ul_title mb10">筛选条件
+                </h1>
+                <style>
+                    .cat_searh li {
+                        float: left;
+                    }
+                </style>
+                <div class="pd10">
+                    <volist name="search_fields" id="vo">
+                        <li class="f14px cgrey" style="line-height: 35px">
+                            <div class="left  mr15">{$vo['alias']}：</div>
+                            <div class="left" style="margin-top: 5px">
+                                {:W('SearchInputRender',array('field'=>$vo))}
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                    </volist>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="hideBar cpointer">
+                <a>展开搜索</a>
+            </div>
+            <div class="clearfix mb10"></div>
+            <div id="col3" class="st-index-right">
+                <div class="right" style="width: 270px;height:80px">
+                    {:W('MxAd',array('name'=>'cat_li_post_right','width'=>270,'height'=>80,'description'=>'分类信息列表页发布按钮右侧广告'))}
+                </div>
+                <div class="clearfix"></div>
+                <div class="clearfix mb10"></div>
+                <div class="mb10">
+                    {:W('MxAd',array('name'=>'cat_li_right_up',width=>270,'description'=>'分类信息列表页推荐上方广告'))}
+                </div>
+                <div class="mb10">
+                    {:W('InfoList',array('name'=>$_GET['name'],'map'=>$_GET,'class'=>'cat_ul_info','type'=>'limit','recom'=>true,'tpl'=>'recom'))}
+                </div>
+                {:W('MxAd',array('name'=>'cat_li_right_down',width=>270,'description'=>'分类信息列表页推荐下方广告'))}
+            </div>
+            <div id="col5" class="">
+                <div class="mr10">
+                    <div class="c_panel">
+                        <h1 class="cat_ul_title mb10">最新</h1>
+
+                        <div>
+                            {:W('InfoList',array('name'=>$_GET['name'],'map'=>$_GET,'class'=>'cat_ul_info','type'=>'list'))}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.cat_search_input').keydown(function (e) {
+                key = e.which;
+                if (key == 13) {
+                    //alert($(this).attr('data'));
+                    cat_search($(this).attr('data'));
+                    return false;
+
+                }
+            });
+
+        });
+
+        function cat_search(frm) {
+            var d = $('#frm_' + frm).serialize();
+            var url = $('#frm_' + frm).attr('data-url');
+            // alert(url);
+            location.href = url + '&' + frm + '=' + encodeURIComponent($('#i_' + frm).val());
+        }
+
+        $(document).ready(function () {
+            $(".hideBar").click(function () {
+                $(".hideRoll").slideToggle("slow", function () {
+                    if ($('.hideBar').text() == '暂时收起') {
+                        $('.hideBar').text('展开搜索');
+                    }
+                    else {
+                        $('.hideBar').text('暂时收起');
+                    }
+
+
+                });
+            });
+        });
+    </script>
+    <include file="__THEME__/public_footer"/>
