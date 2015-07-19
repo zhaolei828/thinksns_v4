@@ -13,6 +13,6 @@ return array_merge(array(
 	'DB_PORT'       => 3306,        // 数据库端口
 	'DB_PREFIX'     => 'ts_',// 数据库表前缀（因为漫游的原因，数据库表前缀必须写在本文件）
 	'DB_CHARSET'    => 'utf8',      // 数据库编码
-	'SECURE_CODE'   => '1051055a8a3574497b',  // 数据加密密钥
+	'SECURE_CODE'   => '292055a924e960422',  // 数据加密密钥
 	'COOKIE_PREFIX' => 'TS4_',      // # cookie
 ), $conf);

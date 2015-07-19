@@ -1,3 +1,20 @@
+*{
+    box-sizing:inherit;
+}
+body{
+    font: 14px "microsoft yahei",Helvetica,Tahoma,Arial,"Microsoft jhengHei",sans-serif;
+}
+a{
+    text-decoration: none;
+    color: #111;
+    cursor: pointer;
+    outline: medium none;
+}
+a:focus, a:hover {
+    color: #111;
+    text-decoration:none;
+    outline: medium none;
+}
 /*reset部分*/
 .c_panel {
     border-radius: 3px;
@@ -752,5 +769,8 @@ h2 {
 
 .pd5 {
     padding: 5px;
+}
+input{
+    font-weight: normal;
 }
 
