@@ -15,6 +15,12 @@ a:focus, a:hover {
     text-decoration:none;
     outline: medium none;
 }
+ul{
+    margin-bottom: 0px;
+}
+h1{
+    margin-top: 0px;
+}
 /*reset部分*/
 .c_panel {
     border-radius: 3px;

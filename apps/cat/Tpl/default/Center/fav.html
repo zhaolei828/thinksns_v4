@@ -15,7 +15,7 @@
                 <ul class="cat_m_entitys">
                     <volist name="entitys" id="vo">
                         <li><a
-                            <if condition="$current_entity eq $vo['entity_id']"> class="current" </if>
+                            <if condition="$current_entity eq $vo['entity_id']"> class="current_my" </if>
                             href="{:U('cat/Center/fav',array('id'=>$vo['entity_id']))}">{$vo.alias}</a></li>
                     </volist>
                 </ul>

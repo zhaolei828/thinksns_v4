@@ -1,13 +1,16 @@
 <script src="__APP__/raty/raty.js"></script>
-<div id="col3" class="right" style="width: 260px">
+<div id="col3" class="right" style="width: 282px">
     <div>
         <div class="mb10 c_panel">
             <h1 class="">发布者</h1>
 
-            <div class="pd10">
+<!--            <div class="pd10">
                 {:W('CUserInformation',array('uid'=>$info['uid'],'tpl'=>'right'))}
+            </div>-->
+            <!-- 个人信息 -->
+            <div class="right-wrap">
+               {:W('UserInformation', array('uid'=>$info['uid'], 'tpl'=>'right', 'isReturn'=>$isReturn))}
             </div>
-
         </div>
         <div class="mb10 c_panel">
             <h1>温馨提示</h1>

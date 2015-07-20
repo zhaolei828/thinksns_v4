@@ -9,33 +9,28 @@
             <include file="./_left"/>
 
         </div>
-        <div class="left" style="width: 760px">
-            <div class="c_panel" >
-                <ul class="cat_m_entitys">
-                    <volist name="entitys" id="vo">
-                        <li><a
-                            <if condition="$current_entity eq $vo['entity_id']"> class="current"</if>
-                            href="{:U('cat/Center/my',array('id'=>$vo['entity_id']))}">{$vo.alias}</a></li>
+        <div class="left c_panel" style="width: 760px">
+            <ul class="cat_m_entitys">
+                <volist name="entitys" id="vo">
+                    <li><a
+                        <if condition="$current_entity eq $vo['entity_id']"> class="current_my"</if>
+                        href="{:U('cat/Center/my',array('id'=>$vo['entity_id']))}">{$vo.alias}</a></li>
+                </volist>
+            </ul>
+            <div class="clearfix"></div>
+            <div class="underline_x"></div>
+            <div class="pd10 mb10 " style="min-height: 500px">
+                <ul>
+                    <volist name="my_post.data" id="vo">
+                        <li>{$vo.tpl}</li>
                     </volist>
                 </ul>
-                <div class="clearfix"></div>
-                <div class="underline_x"></div>
-                <div class="pd10 mb10 " style="min-height: 500px">
-
-                    <ul>
-                        <volist name="my_post.data" id="vo">
-                            <li>{$vo.tpl}</li>
-                        </volist>
-                    </ul>
-                    <div class="page">{$my_post.html}</div>
-                </div>
-
-                <div class="mb10 cat_ul_info pd10" style="text-align: right">
-                    共发布【{$my_post.count}】条信息 共【{$my_post.totalPages}】页
-                </div>
+                <div class="page">{$my_post.html}</div>
             </div>
 
-
+            <div class="mb10 cat_ul_info pd10" style="text-align: right">
+                共发布【{$my_post.count}】条信息 共【{$my_post.totalPages}】页
+            </div>
         </div>
         <div class="clearfix"></div>
     </div>
