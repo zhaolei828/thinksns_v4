@@ -1,13 +1,23 @@
 
 <script type="text/plain" name="{$name}" id="id_{$name}">{$content}</script>
-<script>var {$id} = new UE.ui.Editor({
-    textarea:"{$name}",
-    toolbars: [
-        {$toolbars}
-    ],
-    initialFrameWidth:{$width}, zIndex: {$z_index},
-    initialFrameHeight: {$height},
-    autoHeightEnabled: false
-});
-{$id}.render("id_{$name}");
+<script>
+    UE.getEditor("id_{$name}",{
+            toolbars:[{$toolbars}],
+            zIndex: {$z_index},
+            initialFrameWidth:{$width},
+            initialFrameHeight:{$height},
+            autoHeightEnabled: false
+    })
+    
+    
+//    var {$id} = UE.({
+//        textarea:"{$name}",
+//        toolbars: [
+//            {$toolbars}
+//        ],
+//        initialFrameWidth:{$width}, zIndex: {$z_index},
+//        initialFrameHeight: {$height},
+//        autoHeightEnabled: false
+//    });
+//    {$id}.render("id_{$name}");
 </script>
