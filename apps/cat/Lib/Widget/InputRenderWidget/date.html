@@ -1,8 +1,0 @@
-<if condition="$info_id neq ''">
-    <input name="{$field.name}" type="text" class="text" id="{$field.name}" value="{$field_value|date='Y-m-d',###}" <if condition="$field.args neq ''"> event-node="input_date" event-args="{$field.args}"</if>
-    onfocus="core.rcalendar(this,'full');" readonly="readonly">
-
-<else/>
-<input name="{$field.name}" type="text" class="text" id="{$field.name}" value="{$field.default_value}" <if condition="$field.args neq ''"> event-node="input_date" event-args="{$field.args}"</if>
-       onfocus="core.rcalendar(this,'full');" readonly="readonly">
-</if>
