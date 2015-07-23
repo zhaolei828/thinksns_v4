@@ -1,0 +1,19 @@
+<if condition="$info_id neq ''">
+
+    <select name="{$field.name}" id="{$field.name}" <if condition="$field.args neq ''"> event-node="input_select" event-args="{$field.args}"</if>
+    >
+    <option value="-1">{$field.values.tip}</option>
+    <volist name="field.values.data"  id="vo">
+        <option value="{$key}" <if condition="intval($field_value) eq $key">selected</if>  >{$vo}</option>
+    </volist>
+    </select>
+
+    <else/>
+
+    <select name="{$field.name}" id="{$field.name}" <if condition="$field.args neq ''"> event-node="input_select" event-args="{$field.args}"</if>>
+    <option value="-1">{$field.values.tip}</option>
+    <volist name="field.values.data"  id="vo">
+        <option value="{$key}">{$vo}</option>
+    </volist>
+    </select>
+    </if>

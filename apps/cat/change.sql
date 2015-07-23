@@ -1,0 +1,1 @@
+ALTER TABLE  `ts_cat_entity` ADD  `pb_color` VARCHAR( 20 ) NOT NULL

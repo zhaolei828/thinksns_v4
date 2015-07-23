@@ -1,0 +1,30 @@
+<li>
+<div class="c_def_dv">
+    <dl class="lh28"  style="clear: left">
+        <dt class="ofh w200px"><a target="_blank" class="c333 f16px"
+                                  href="{:U('cat/Index/info',array('info_id'=>$vo['info_id']))}">{:getShort(getInfoFirstValue($vo['info_id']),20)}</a>
+        </dt>
+        <dd class="ofh w100px">
+            {:W('FavBtn',array('info_id'=>$vo['info_id']))}
+                        <span id='c_info_fav_num_{$vo.info_id}'>
+                        <php>
+                            echo D('cat_fav')->where('info_id='.$vo['info_id'])->count();
+                        </php></span>
+            收藏
+        </dd>
+        <dd class="w100px">
+            {$vo.rate| number_format=1}评分
+        </dd>
+        <dd class="ofh w100px">
+            <a class="c666" href="{$vo.user.space_url}" event-node="face_card" uid="{$vo.user.uid}"><img class="mr5 p16"
+                                                                                                         src="{$vo.user.avatar_tiny}">{$vo.user.uname}</a>
+        </dd>
+        <dd>
+            {$vo.cTime|friendlyDate}
+        </dd>
+
+    </dl>
+    <dd style="clear: right"></dd>
+    <div class="clearfix"></div>
+</div>
+</li>

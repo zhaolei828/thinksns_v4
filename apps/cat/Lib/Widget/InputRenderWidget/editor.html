@@ -1,0 +1,6 @@
+<if condition="$info_id neq ''">
+    <div  id="{$field.name}" class="cat_editor mb10">{:W('UEditor',array('width'=>700,'id'=>$field['name'],'name'=>$field['name'],'toolbars'=>"['bold','underline','fontsize','formatmatch','autotypeset','customstyle','lineheight','fontfamily', 'justifyleft', 'justifycenter', 'justifyright','fullscreen'],['map', 'insertimage', 'insertvideo', 'emotion','music','wordimage','attachment']",'content'=>$field_value))}</div>
+    <else/>
+    <div id="{$field.name}" class="cat_editor mb10">{:W('UEditor',array('width'=>700,'id'=>$field['name'],'name'=>$field['name'],'toolbars'=>"['bold','underline','fontsize','formatmatch','autotypeset','customstyle','lineheight','fontfamily', 'justifyleft', 'justifycenter', 'justifyright','fullscreen'],['map', 'insertimage', 'insertvideo', 'emotion','music','wordimage','attachment']"))}</div>
+
+</if>
