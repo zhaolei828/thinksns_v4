@@ -25,16 +25,23 @@ class TagWidget extends Widget{
 		$var['row_id'] = 0;
 		$var['tpl'] = 'tag';
         $var['tag_num'] = 10;
+        $var['isUserTag'] = false;
 		is_array($data) && $var = array_merge($var,$data);
 		// 清除缓存
 		model('Cache')->rm('temp_'.$var['apptable'].$GLOBALS['ts']['mid']);
 		$var['add_url'] = U('widget/Tag/addTag',array('appname'=>$var['appname'],'apptable'=>$var['apptable'],'row_id'=>$var['row_id']));
 		$var['delete_url'] = U('widget/Tag/deleteTag',array('appname'=>$var['appname'],'apptable'=>$var['apptable'],'row_id'=>$var['row_id']));
         // 获取标签
-		$tags = model('Tag')->setAppName($var['appname'])->setAppTable($var['apptable'])->getAppTags($var['row_id']);
+		$tags = model('Tag')->setAppName($var['appname'])->setAppTable($var['apptable'])->getAppTags($var['row_id'], $var['isUserTag']);
 		$var['tags'] = $tags;
 		// 以选中ID
-		$var['tags_my'] = implode(',', array_flip($tags));
+        $map['row_id'] = array('IN', $var['row_id']);
+        $map['table'] = $var['apptable'];
+        $app_tags = D('app_tag')->where($map)->findAll();
+        $tag_ids = getSubByKey($app_tags, 'tag_id');
+		$var['tags_my_ids'] = implode(',',$tag_ids);
+        // 获取标签名称
+        $var['tags_my'] = model('Tag')->getTagNames($tag_ids);
 
         // 获取推荐标签
         $uid = intval($data['uid']);
@@ -48,7 +55,6 @@ class TagWidget extends Widget{
                 unset($var['categoryTree'][$key]);
             }
         }
-
 		$content = $this->renderFile(dirname(__FILE__)."/".$var['tpl'].".html", $var);
 		
 		return $content;

@@ -120,6 +120,7 @@ class CaptchaModel extends Model {
 
 		if ($result and in_array($type, $this->_mobileType)) {
 			$result = model('Sms')->newSendSMS($data['communication'], $data['content']);
+			$result or $this->setError('发送失败');
 		}
 
 		return $result;

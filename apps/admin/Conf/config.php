@@ -9,6 +9,7 @@ $menu = array(
 		'task'      => L('PUBLIC_TASK'),
 		'apps'      => L('PUBLIC_APPLICATION'),
 		'extends'   => '插件',//L('PUBLIC_EXPANSION'),
+		'mobile'    => '手机版',
 		// 'weixin'    => '微信管理',
 	),
 	//后台菜单配置
@@ -116,6 +117,13 @@ $menu = array(
    //  			'所有插件列表' => U('admin/Addons/index','is_weixin=1'),
    //  		),
 	 	// ),		
+	 	'mobile' => array(
+	 		'3G版设置' => array(
+	 			'LOGO'     => U('admin/Mobile/w3gLogo'),
+	 			'广场轮播' => U('admin/Mobile/w3gSlideShow'),
+	 			'关于我们' => U('admin/Mobile/w3gAbout'),
+	 		),
+	 	),
     )
 );
 

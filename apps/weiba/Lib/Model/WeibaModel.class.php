@@ -134,7 +134,7 @@ class WeibaModel extends Model {
 			$admin_uid = model ( 'User' )->getUserInfoByUids ( $v ['admin_uid'] );
 			$list ['data'] [$k] ['admin_uid'] = $admin_uid [$v ['admin_uid']] ['space_link'];
 			$list ['data'] [$k] ['follower_count/thread_count'] = $v ['follower_count'] . '/' . $v ['thread_count'];
-			$isrecommend = $v ['recommend'] ? '取消推荐' : '推荐到首页';
+			$isrecommend = $v ['recommend'] ? '取消推荐' : '首页热帖推荐';
 			$list ['data'] [$k] ['weiba_cate'] = $cids [$v ['cid']];
 			$list ['data'] [$k] ['DOACTION'] = '<a href="javascript:void(0)" onclick="admin.recommend(' . $v ['weiba_id'] . ',' . $v ['recommend'] . ');">' . $isrecommend . '</a>&nbsp;-&nbsp;<a href="' . U ( 'weiba/Admin/editWeiba', array (
 					'weiba_id' => $v ['weiba_id'],

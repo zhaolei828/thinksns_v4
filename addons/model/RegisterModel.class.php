@@ -48,6 +48,34 @@ class RegisterModel extends Model {
 	}
 
 	/**
+	 * 验证邮箱正确性
+	 *
+	 * @param string $email 邮箱地址
+	 * @param string $oldEmail 旧邮箱地址
+	 * @return bool
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function isValidEmail($email, $oldEmail = null)
+	{
+		// # 判断邮箱格式正确性
+		if (!preg_match($this->_email_reg, $email, $matches)) {
+			$this->_error = '无效的Email地址';
+			return false;
+
+		// # 判断是否是规定的后缀
+		} elseif (!empty($this->_config['email_suffix']) and !in_array($matches['1'], explode(',', $this->_config['email_suffix']))) {
+			$this->_error = '该邮箱后缀不允许注册';
+			return false;
+
+		// # 判断是否被注册
+		} elseif (!$this->_user_model->isChangeEmail($email, $this->_user_model->where('`email` LIKE "' . $oldEmail . '"')->field('uid')->getField('uid'))) {
+			$this->_error = '该Email已被注册';
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * 验证邮箱内容的正确性
 	 * 
 	 * @param string $email
@@ -56,31 +84,31 @@ class RegisterModel extends Model {
 	 *        	原始邮箱的信息
 	 * @return boolean 是否验证成功
 	 */
-	public function isValidEmail($email, $old_email = null) {
-		$res = preg_match ( $this->_email_reg, $email, $matches ) !== 0;
-		$mobile_res = preg_match ( $this->_mobile_reg, $email, $matches ) !== 0;
-		if (! $res && ! $mobile_res) {
-			$this->_error = '无效的账号格式';
-		} else if ($res && ! $mobile_res) {
-			if (! empty ( $this->_config ['email_suffix'] )) {
-				$res = in_array ( $matches ['1'], explode ( ',', $this->_config ['email_suffix'] ) );
-				// !$res && $this->_error = $matches['1'].L('PUBLIC_EMAIL_SUFFIX_FORBIDDEN'); // 邮箱后缀不允许注册
-				! $res && $this->_error = '该邮箱后缀不允许注册'; // 邮箱后缀不允许注册
-			}
-			if ($res && ($email != $old_email) && $this->_user_model->where ( '`email`="' . mysql_escape_string ( $email ) . '"' )->find ()) {
-				$this->_error = L ( 'PUBLIC_EMAIL_REGISTER' ); // 该Email已被注册
-				$res = false;
-			}
-		} else if ($mobile_res && ! $res) {
-			if ($mobile_res && ($email != $old_email) && $this->_user_model->where ( '`email`="' . $email . '"' )->find ()) {
-				$this->_error = '该Email已被注册'; // 该Email已被注册
-				$res = false;
-			} else {
-				$res = true;
-			}
-		}
-		return ( boolean ) $res;
-	}
+	// public function isValidEmail($email, $old_email = null) {
+	// 	$res = preg_match ( $this->_email_reg, $email, $matches ) !== 0;
+	// 	$mobile_res = preg_match ( $this->_mobile_reg, $email, $matches ) !== 0;
+	// 	if (! $res && ! $mobile_res) {
+	// 		$this->_error = '无效的账号格式';
+	// 	} else if ($res && ! $mobile_res) {
+	// 		if (! empty ( $this->_config ['email_suffix'] )) {
+	// 			$res = in_array ( $matches ['1'], explode ( ',', $this->_config ['email_suffix'] ) );
+	// 			// !$res && $this->_error = $matches['1'].L('PUBLIC_EMAIL_SUFFIX_FORBIDDEN'); // 邮箱后缀不允许注册
+	// 			! $res && $this->_error = '该邮箱后缀不允许注册'; // 邮箱后缀不允许注册
+	// 		}
+	// 		if ($res && ($email != $old_email) && $this->_user_model->where ( '`email`="' . mysql_escape_string ( $email ) . '"' )->find ()) {
+	// 			$this->_error = L ( 'PUBLIC_EMAIL_REGISTER' ); // 该Email已被注册
+	// 			$res = false;
+	// 		}
+	// 	} else if ($mobile_res && ! $res) {
+	// 		if ($mobile_res && ($email != $old_email) && $this->_user_model->where ( '`email`="' . $email . '"' )->find ()) {
+	// 			$this->_error = '该Email已被注册'; // 该Email已被注册
+	// 			$res = false;
+	// 		} else {
+	// 			$res = true;
+	// 		}
+	// 	}
+	// 	return ( boolean ) $res;
+	// }
 
 	public function isValidPhone($phone, $old_phone = null) {
 		$res = preg_match($this->_phone_reg, $phone, $matches) !== 0;

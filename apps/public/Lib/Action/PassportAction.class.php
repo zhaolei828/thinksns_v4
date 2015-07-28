@@ -35,7 +35,7 @@ class PassportAction extends Action
 		// 添加样式
 		$this->appCssList[] = 'login.css';
 		if(model('Passport')->isLogged()){
-			U('public/Index/index','',true);
+			redirect($this->site['home_url']);
 		}
 
 		// 获取邮箱后缀

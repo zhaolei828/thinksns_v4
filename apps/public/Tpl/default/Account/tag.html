@@ -15,7 +15,7 @@
             <dl class="form-set">
               <dd>
                 <div class="form-row">
-                {:W('Tag', array('width'=>'400px', 'row_id'=>$mid, 'tpl'=>'tags', 'tag_num'=>$tag_num))}
+                {:W('Tag', array('width'=>'400px', 'row_id'=>$mid, 'tpl'=>'tags', 'tag_num'=>$tag_num, 'isUserTag' => true))}
                 <a event-node="submit_btn" href="#" class="btn-green-big ml">{:L('PUBLIC_SAVE')}</a>
                 </div>
                 <input type="text" style="display:none">

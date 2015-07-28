@@ -38,13 +38,17 @@ class TagModel extends Model
 	 * @param array|integer $row_ids 应用内容编号
 	 * @return array 标签内容列表
 	 */
-	public function getAppTags($row_ids)
+	public function getAppTags($row_ids, $isUserTag = false)
 	{
 		$map['row_id'] = array('IN', $row_ids);
 		$map['table'] = $this->_app_table;
+		D('app_tag')->where('`table` LIKE "' . $this->_app_table . '" AND `tag_id` <= 0')->delete();
 		$app_tags = D('app_tag')->where($map)->findAll();
 		// 获取标签名称
 		$names = $this->getTagNames(getSubByKey($app_tags, 'tag_id'));
+		if ($isUserTag) {
+			return $names;
+		}
 		// 重组结果
 		foreach($app_tags as $a_t_k => $a_t_v) {
 			// 如果为用户标签，则用user_category_id

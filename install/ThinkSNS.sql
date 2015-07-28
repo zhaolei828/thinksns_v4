@@ -3651,16 +3651,16 @@ INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_typ
 INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(58, 'public', 'feed', 75793, 'feed_image', 32166, 1434361888, '武林高手.png', 'image/png', '51943', 'png', '5f5352b8de197821c6d6174d565a2bb5', 0, 0, '2015/0615/17/', '557ea020634ae.png', 0, 0, 224, 290);
 INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(38, '', '', 0, 'feed_image', 32166, 1434361900, '分享达人.png', 'image/png', '51283', 'png', '26f88a2d3f21b555374f504b9e3cc808', 0, 0, '2015/0615/17/', '557ea02c2c601.png', 0, 0, 224, 290);
 INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(39, 'public', 'feed', 76143, 'feed_image', 32166, 1434361919, '小有进步.png', 'image/png', '49379', 'png', 'e36b61ed9670228d568dfe383d23fcae', 0, 0, '2015/0615/17/', '557ea03f54d9c.png', 0, 0, 224, 290);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(72, '', '', 0, 'feed_image', 1, 1436956686, '557141a953668.png', 'image/png', '14850', 'png', 'dcba2a008076198e9520da29fd5a3713', 0, 0, '2015/0715/18/', '557141a953668.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(73, '', '', 0, 'feed_image', 1, 1436956702, '5571424a9a178.png', 'image/png', '14868', 'png', '8a561e2da911e7c4bd8d91aa2e49690a', 0, 0, '2015/0715/18/', '5571424a9a178.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(74, '', '', 0, 'feed_image', 1, 1436956713, '5571421d1f65f.png', 'image/png', '14862', 'png', '54de6304d8380db7d676366d34e37421', 0, 0, '2015/0715/18/', '5571421d1f65f.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(75, '', '', 0, 'feed_image', 1, 1436956730, '55714255a3c4f.png', 'image/png', '14859', 'png', 'bdefcd0ec4b8c912927afddac584fef9', 0, 0, '2015/0715/18/', '55714255a3c4f.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(76, '', '', 0, 'feed_image', 1, 1436956752, '557142620d98b.png', 'image/png', '14858', 'png', 'cede3e3c1a228820cfc5d934cac62f59', 0, 0, '2015/0715/18/', '557142620d98b.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(77, '', '', 0, 'feed_image', 1, 1436956768, '5571426da8964.png', 'image/png', '14893', 'png', 'db48244967f9c1779e6274b26cc2e693', 0, 0, '2015/0715/18/', '5571426da8964.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(78, '', '', 0, 'feed_image', 1, 1436956782, '55714278006a3.png', 'image/png', '14861', 'png', '70287b345f9d885bd1d7bc7cdb46dd44', 0, 0, '2015/0715/18/', '55714278006a3.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(79, '', '', 0, 'feed_image', 1, 1436956793, '5571428166417.png', 'image/png', '14872', 'png', 'aaf37a251443585f35e5982f37671c09', 0, 0, '2015/0715/18/', '5571428166417.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(80, '', '', 0, 'feed_image', 1, 1436956802, '5571429aa4fe3.png', 'image/png', '14873', 'png', 'cda48ace4d5b691e81d13bb6f12acf55', 0, 0, '2015/0715/18/', '5571429aa4fe3.png', 0, 0, 48, 10);
-INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(81, '', '', 0, 'feed_image', 1, 1436956809, '557142bfdca0c.png', 'image/png', '14846', 'png', 'ac8dab678ddcf3d536996910025d3e89', 0, 0, '2015/0715/18/', '557142bfdca0c.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(72, '', '', 0, 'feed_image', 1, 1436956686, '557141a953668.png', 'image/png', '14850', 'png', 'dcba2a008076198e9520da29fd5a3713', 0, 0, '2015/0715/18/', '55a6380e408a3.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(73, '', '', 0, 'feed_image', 1, 1436956702, '5571424a9a178.png', 'image/png', '14868', 'png', '8a561e2da911e7c4bd8d91aa2e49690a', 0, 0, '2015/0715/18/', '55a6381e4a2e7.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(74, '', '', 0, 'feed_image', 1, 1436956713, '5571421d1f65f.png', 'image/png', '14862', 'png', '54de6304d8380db7d676366d34e37421', 0, 0, '2015/0715/18/', '55a6382990a51.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(75, '', '', 0, 'feed_image', 1, 1436956730, '55714255a3c4f.png', 'image/png', '14859', 'png', 'bdefcd0ec4b8c912927afddac584fef9', 0, 0, '2015/0715/18/', '55a6383a9e46d.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(76, '', '', 0, 'feed_image', 1, 1436956752, '557142620d98b.png', 'image/png', '14858', 'png', 'cede3e3c1a228820cfc5d934cac62f59', 0, 0, '2015/0715/18/', '55a63850697ab.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(77, '', '', 0, 'feed_image', 1, 1436956768, '5571426da8964.png', 'image/png', '14893', 'png', 'db48244967f9c1779e6274b26cc2e693', 0, 0, '2015/0715/18/', '55a638602b25a.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(78, '', '', 0, 'feed_image', 1, 1436956782, '55714278006a3.png', 'image/png', '14861', 'png', '70287b345f9d885bd1d7bc7cdb46dd44', 0, 0, '2015/0715/18/', '55a6386e5f427.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(79, '', '', 0, 'feed_image', 1, 1436956793, '5571428166417.png', 'image/png', '14872', 'png', 'aaf37a251443585f35e5982f37671c09', 0, 0, '2015/0715/18/', '55a6387915016.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(80, '', '', 0, 'feed_image', 1, 1436956802, '5571429aa4fe3.png', 'image/png', '14873', 'png', 'cda48ace4d5b691e81d13bb6f12acf55', 0, 0, '2015/0715/18/', '55a6388241e1d.png', 0, 0, 48, 10);
+INSERT INTO `ts_attach` (`attach_id`, `app_name`, `table`, `row_id`, `attach_type`, `uid`, `ctime`, `name`, `type`, `size`, `extension`, `hash`, `private`, `is_del`, `save_path`, `save_name`, `save_domain`, `from`, `width`, `height`) VALUES(81, '', '', 0, 'feed_image', 1, 1436956809, '557142bfdca0c.png', 'image/png', '14846', 'png', 'ac8dab678ddcf3d536996910025d3e89', 0, 0, '2015/0715/18/', '55a6388988dc5.png', 0, 0, 48, 10);
 
 -- --------------------------------------------------------
 
@@ -6449,27 +6449,6 @@ TRUNCATE TABLE `ts_medal_user`;
 -- --------------------------------------------------------
 
 --
--- 表的结构 `ts_message_client`
---
-
-DROP TABLE IF EXISTS `ts_message_client`;
-CREATE TABLE IF NOT EXISTS `ts_message_client` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) DEFAULT '0',
-  `client_id` int(11) DEFAULT '0',
-  `last_active_time` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uid` (`uid`,`client_id`) USING HASH
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- 插入之前先把表清空（truncate） `ts_message_client`
---
-
-TRUNCATE TABLE `ts_message_client`;
--- --------------------------------------------------------
-
---
 -- 表的结构 `ts_message_content`
 --
 
@@ -6529,19 +6508,35 @@ TRUNCATE TABLE `ts_message_list`;
 
 DROP TABLE IF EXISTS `ts_message_member`;
 CREATE TABLE IF NOT EXISTS `ts_message_member` (
+  `id` int(11) unsigned NOT NULL COMMENT '主键',
   `list_id` int(11) unsigned NOT NULL COMMENT '私信ID',
   `member_uid` int(11) unsigned NOT NULL COMMENT '参与私信的用户UID',
   `new` smallint(8) unsigned NOT NULL DEFAULT '0' COMMENT '未读消息数',
   `message_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '消息总数',
   `ctime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '该参与者最后会话时间',
   `list_ctime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '私信最后会话时间',
-  `is_del` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除（假的删除）',
-  PRIMARY KEY (`list_id`,`member_uid`),
-  UNIQUE KEY `list_uid` (`list_id`,`member_uid`) USING BTREE,
-  KEY `new` (`new`) USING BTREE,
-  KEY `ctime` (`ctime`) USING BTREE,
-  KEY `list_ctime` (`list_ctime`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `is_del` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除（假的删除）'
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ts_message_member`
+--
+ALTER TABLE `ts_message_member`
+  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `list_uid` (`list_id`,`member_uid`) USING BTREE, ADD KEY `new` (`new`) USING BTREE, ADD KEY `ctime` (`ctime`) USING BTREE, ADD KEY `list_ctime` (`list_ctime`) USING BTREE;
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `ts_message_member`
+--
+ALTER TABLE `ts_message_member`
+  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',AUTO_INCREMENT=1;
 
 --
 -- 插入之前先把表清空（truncate） `ts_message_member`
@@ -6549,6 +6544,50 @@ CREATE TABLE IF NOT EXISTS `ts_message_member` (
 
 TRUNCATE TABLE `ts_message_member`;
 -- --------------------------------------------------------
+
+--
+-- 表的结构 `ts_message_push`
+--
+DROP TABLE IF EXISTS `ts_message_push`;
+CREATE TABLE IF NOT EXISTS `ts_message_push` (
+  `uid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `message_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '消息ID',
+  `list_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '私信ID',
+  `ctime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推送内容暂存表';
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ts_message_push`
+--
+ALTER TABLE `ts_message_push`
+  ADD UNIQUE KEY `uid` (`uid`,`message_id`) USING BTREE;
+
+--
+-- 表的结构 `ts_message_ucmap`
+--
+
+DROP TABLE IF EXISTS `ts_message_ucmap`;
+CREATE TABLE IF NOT EXISTS `ts_message_ucmap` (
+  `uid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `client_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '客户端ID',
+  `ctime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `gateway_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'GATEWAY_ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户到客户端映射表';
+
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ts_message_ucmap`
+--
+ALTER TABLE `ts_message_ucmap`
+  ADD PRIMARY KEY (`client_id`), ADD KEY `uid` (`uid`);
 
 --
 -- 表的结构 `ts_mobile_message`
@@ -7614,7 +7653,7 @@ INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES(66
 INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES(6655, 'pageKey', 'admin_Content_video', 'a:4:{s:3:"key";a:7:{s:8:"video_id";s:8:"video_id";s:4:"name";s:4:"name";s:4:"size";s:4:"size";s:3:"uid";s:3:"uid";s:5:"ctime";s:5:"ctime";s:4:"from";s:4:"from";s:8:"DOACTION";s:8:"DOACTION";}s:8:"key_name";a:7:{s:8:"video_id";s:8:"视频ID";s:4:"name";s:12:"视频名称";s:4:"size";s:12:"视频大小";s:3:"uid";s:12:"上传用户";s:5:"ctime";s:12:"上传时间";s:4:"from";s:6:"来源";s:8:"DOACTION";s:6:"操作";}s:10:"key_hidden";a:7:{s:8:"video_id";s:1:"0";s:4:"name";s:1:"0";s:4:"size";s:1:"0";s:3:"uid";s:1:"0";s:5:"ctime";s:1:"0";s:4:"from";s:1:"0";s:8:"DOACTION";s:1:"0";}s:14:"key_javascript";a:7:{s:8:"video_id";s:0:"";s:4:"name";s:0:"";s:4:"size";s:0:"";s:3:"uid";s:0:"";s:5:"ctime";s:0:"";s:4:"from";s:0:"";s:8:"DOACTION";s:0:"";}}', '2015-07-14 06:20:02');
 INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES(6662, 'pageKey', 'admin_User_disableSendList', 'a:4:{s:3:"key";a:11:{s:3:"uid";s:3:"uid";s:5:"uname";s:5:"uname";s:10:"user_group";s:10:"user_group";s:8:"location";s:8:"location";s:8:"is_audit";s:8:"is_audit";s:9:"is_active";s:9:"is_active";s:7:"is_init";s:7:"is_init";s:5:"ctime";s:5:"ctime";s:6:"reg_ip";s:6:"reg_ip";s:12:"disable_time";s:12:"disable_time";s:8:"DOACTION";s:8:"DOACTION";}s:8:"key_name";a:11:{s:3:"uid";s:3:"UID";s:5:"uname";s:9:"用户名";s:10:"user_group";s:9:"用户组";s:8:"location";s:6:"地区";s:8:"is_audit";s:12:"是否审核";s:9:"is_active";s:12:"是否激活";s:7:"is_init";s:15:"是否初始化";s:5:"ctime";s:12:"注册时间";s:6:"reg_ip";s:8:"注册IP";s:12:"disable_time";s:12:"禁言时间";s:8:"DOACTION";s:6:"操作";}s:10:"key_hidden";a:11:{s:3:"uid";s:1:"0";s:5:"uname";s:1:"0";s:10:"user_group";s:1:"0";s:8:"location";s:1:"0";s:8:"is_audit";s:1:"0";s:9:"is_active";s:1:"0";s:7:"is_init";s:1:"0";s:5:"ctime";s:1:"0";s:6:"reg_ip";s:1:"0";s:12:"disable_time";s:1:"0";s:8:"DOACTION";s:1:"0";}s:14:"key_javascript";a:11:{s:3:"uid";s:0:"";s:5:"uname";s:0:"";s:10:"user_group";s:0:"";s:8:"location";s:0:"";s:8:"is_audit";s:0:"";s:9:"is_active";s:0:"";s:7:"is_init";s:0:"";s:5:"ctime";s:0:"";s:6:"reg_ip";s:0:"";s:12:"disable_time";s:0:"";s:8:"DOACTION";s:0:"";}}', '2015-07-14 07:24:10');
 INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES
-(6664, 'pageKey', 'admin_Upgrade_check', 'a:6:{s:3:"key";a:1:{s:3:"log";s:3:"log";}s:8:"key_name";a:1:{s:3:"log";s:12:"升级日志";}s:8:"key_type";a:1:{s:3:"log";s:8:"textarea";}s:11:"key_default";a:1:{s:3:"log";s:0:"";}s:9:"key_tishi";a:1:{s:3:"log";s:0:"";}s:14:"key_javascript";a:1:{s:3:"log";s:0:"";}}', '2015-07-16 10:24:49');
+(6664, 'pageKey', 'admin_Upgrade_check', 'a:6:{s:3:"key";a:2:{s:3:"log";s:3:"log";s:4:"tips";s:4:"tips";}s:8:"key_name";a:2:{s:3:"log";s:12:"升级日志";s:4:"tips";s:12:"升级提示";}s:8:"key_type";a:2:{s:3:"log";s:8:"textarea";s:4:"tips";s:6:"define";}s:11:"key_default";a:2:{s:3:"log";s:0:"";s:4:"tips";s:0:"";}s:9:"key_tishi";a:2:{s:3:"log";s:0:"";s:4:"tips";s:0:"";}s:14:"key_javascript";a:2:{s:3:"log";s:0:"";s:4:"tips";s:0:"";}}', '2015-07-17 13:40:28');
 
 -- --------------------------------------------------------
 
@@ -9499,6 +9538,32 @@ CREATE TABLE IF NOT EXISTS `ts_x_logs` (
 --
 
 TRUNCATE TABLE `ts_x_logs`;
+-- -----------------------------------------------------------
+
+--
+-- 表结构 `ts_w3g_slide_show`
+--
+
+DROP TABLE IF EXISTS `ts_w3g_slide_show`;
+CREATE TABLE IF NOT EXISTS `ts_w3g_slide_show` (
+  `id`    int(10)      NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `image` int(10)      NOT NULL                COMMENT '图片ID',
+  `url`   varchar(255) NOT NULL DEFAULT ''     COMMENT '跳转地址',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `ts_system_config`
+--
+
+INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
+('pageKey', 'admin_Mobile_addW3gSlideShow', 'a:6:{s:3:"key";a:2:{s:5:"image";s:5:"image";s:3:"url";s:3:"url";}s:8:"key_name";a:2:{s:5:"image";s:12:"轮播图片";s:3:"url";s:18:"点击跳转地址";}s:8:"key_type";a:2:{s:5:"image";s:5:"image";s:3:"url";s:4:"text";}s:11:"key_default";a:2:{s:5:"image";s:0:"";s:3:"url";s:0:"";}s:9:"key_tishi";a:2:{s:5:"image";s:21:"用于显示的图片";s:3:"url";s:42:"可以不填，为空表示图片仅展示";}s:14:"key_javascript";a:2:{s:5:"image";s:0:"";s:3:"url";s:0:"";}}', '2015-07-24 09:15:03');
+INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
+('pageKey', 'admin_Mobile_w3gSlideShow', 'a:4:{s:3:"key";a:3:{s:5:"image";s:5:"image";s:3:"url";s:3:"url";s:8:"doaction";s:8:"doaction";}s:8:"key_name";a:3:{s:5:"image";s:18:"轮播图片缩略";s:3:"url";s:12:"跳转地址";s:8:"doaction";s:6:"操作";}s:10:"key_hidden";a:3:{s:5:"image";s:1:"0";s:3:"url";s:1:"0";s:8:"doaction";s:1:"0";}s:14:"key_javascript";a:3:{s:5:"image";s:0:"";s:3:"url";s:0:"";s:8:"doaction";s:0:"";}}', '2015-07-24 09:31:39');
+INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
+('pageKey', 'admin_Mobile_w3gLogo', 'a:6:{s:3:"key";a:1:{s:4:"logo";s:4:"logo";}s:8:"key_name";a:1:{s:4:"logo";s:0:"";}s:8:"key_type";a:1:{s:4:"logo";s:5:"image";}s:11:"key_default";a:1:{s:4:"logo";s:0:"";}s:9:"key_tishi";a:1:{s:4:"logo";s:0:"";}s:14:"key_javascript";a:1:{s:4:"logo";s:0:"";}}', '2015-07-24 12:05:59');
+INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
+('pageKey', 'admin_Mobile_w3gAbout', 'a:6:{s:3:"key";a:1:{s:5:"about";s:5:"about";}s:8:"key_name";a:1:{s:5:"about";s:12:"关于我们";}s:8:"key_type";a:1:{s:5:"about";s:6:"editor";}s:11:"key_default";a:1:{s:5:"about";s:0:"";}s:9:"key_tishi";a:1:{s:5:"about";s:35:"设置3G页面关于我们的内容";}s:14:"key_javascript";a:1:{s:5:"about";s:0:"";}}', '2015-07-24 12:32:59');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

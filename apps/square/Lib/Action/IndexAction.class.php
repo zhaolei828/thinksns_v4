@@ -48,7 +48,7 @@ class IndexAction extends Action {
 				$feedInfos[$val['feed_id']] = $val;
 			}
 			$cmap['c.feed_id'] = array('IN', $feedIds);
-			$categoryInfo = D()->table('`ts_channel` AS c LEFT JOIN `ts_channel_category` AS cc ON cc.channel_category_id = c.channel_category_id')
+			$categoryInfo = D()->table('`'.C('DB_PREFIX').'channel` AS c LEFT JOIN `'.C('DB_PREFIX').'channel_category` AS cc ON cc.channel_category_id = c.channel_category_id')
 			->field('c.`feed_id`,c.`feed_channel_link_id`, c.`status`, cc.channel_category_id, cc.`title`')
 			->where($cmap)
 			->findAll();
@@ -117,7 +117,7 @@ class IndexAction extends Action {
 			foreach($weiba_recommend as $k=>$v){
 				$weiba_recommend[$k]['logo'] = getImageUrlByAttachId($v['logo']);
 				//帖子推荐
-				$sql = "SELECT post_id,title FROM `ts_weiba_post` WHERE weiba_id=".$v['weiba_id']." AND ( `is_del` = 0 ) ORDER BY recommend desc,recommend_time desc,post_time desc LIMIT 3";
+				$sql = "SELECT post_id,title FROM `" . C('DB_PREFIX') . "weiba_post` WHERE weiba_id=".$v['weiba_id']." AND ( `is_del` = 0 ) ORDER BY recommend desc,recommend_time desc,post_time desc LIMIT 3";
 				$weiba_post = M('weiba_post')->query($sql);
 				if($weiba_post){
 					foreach($weiba_post as $kk=>$vv){
@@ -196,7 +196,7 @@ class IndexAction extends Action {
 	        $_user_recommend['verified_info']['icon'] = basename(substr($icon, 0, strpos($icon, '.')));
 			$this->assign('_user_recommend',$_user_recommend);
 			//用户分享配图
-			$_user_recommend_feedimages = array();/*D('WeiboAttach', 'photo')->getUserAttachData($_user_recommend_verified['uid'], 4);*/
+			$_user_recommend_feedimages = $this->getUserAttachData($_user_recommend_verified['uid']);
 			foreach ($_user_recommend_feedimages as $key => &$value) {
 				$value['src'] = getImageUrl($value['savepath'],'103','100',true,false);
 				$value['uid'] = $_user_recommend_verified['uid'];
@@ -210,5 +210,32 @@ class IndexAction extends Action {
 		}
 		
 		$this->display ();
+	}
+
+
+
+	private function getUserAttachData ($uid, $limit = 4, $page = 1) {
+		$map['a.uid'] = $uid;
+		$map['a.type'] = 'postimage';
+		$map['is_del'] = 0;
+		$limit_start = ($page-1)*$limit;
+		$list = D()->table('`'.C('DB_PREFIX').'feed` AS a LEFT JOIN `'.C('DB_PREFIX').'feed_data` AS b ON a.`feed_id` = b.`feed_id`')
+		   		   ->field('a.`feed_id`, a.`publish_time`, b.`feed_data`')
+		   		   ->where($map)
+		   		   ->order('feed_id DESC')
+		   		   ->limit($limit_start.','.$limit)
+		   		   ->findAll();
+
+		// 获取附件信息
+		foreach ($list as &$value) {
+			$tmp = unserialize($value['feed_data']);
+			$attachId = is_array($tmp['attach_id']) ? intval($tmp['attach_id'][0]) : intval($tmp['attach_id']);
+			$attachInfo = model('Attach')->getAttachById($attachId);
+			$value['savepath'] = $attachInfo['save_path'].$attachInfo['save_name'];
+			$value['name'] = $attachInfo['name'];
+			$value['body'] = parseForApi($tmp['body']);
+		}
+
+		return $list;
 	}
 }

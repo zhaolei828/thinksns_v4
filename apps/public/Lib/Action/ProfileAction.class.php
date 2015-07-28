@@ -1034,9 +1034,9 @@ class ProfileAction extends Action {
 		$map ['a.is_del'] = 0;
 		$map ['f.is_del'] = 0;
 		
-		$dao = M ()->table ( 'ts_attach as a left join ts_feed as f on a.row_id=f.feed_id' );
-		
-		$res ['count'] = intval ( M ()->table ( 'ts_attach as a left join ts_feed as f on a.row_id=f.feed_id' )->where ( $map )->count () );
+		$dao = M ()->table ( C( 'DB_PREFIX' ) .'attach as a left join '. C( 'DB_PREFIX' ) .'feed as f on a.row_id=f.feed_id' );
+
+		$res ['count'] = intval ( M ()->table ( C( 'DB_PREFIX' ) . 'attach as a left join '. C( 'DB_PREFIX' ) .'feed as f on a.row_id=f.feed_id' )->where ( $map )->count () );
 		
 		$order = 'a.attach_id desc';
 		if ($max_id > 0) {
@@ -1054,7 +1054,7 @@ class ProfileAction extends Action {
 			}
 		}
 		
-		$lists = M ()->table ( 'ts_attach as a left join ts_feed as f on a.row_id=f.feed_id' )->where ( $map )->order ( $order )->limit ( 5 )->findAll ();
+		$lists = M ()->table ( C( 'DB_PREFIX' ) . 'attach as a left join '. C( 'DB_PREFIX' ) .'feed as f on a.row_id=f.feed_id' )->where ( $map )->order ( $order )->limit ( 5 )->findAll ();
 		// lastsql ();
 		// dump ( $lists );
 		if ($type == 1) { // 倒序
@@ -1085,7 +1085,7 @@ class ProfileAction extends Action {
 				'gt',
 				$max_id2 
 		);
-		if ($max_id > 0 && M ()->table ( 'ts_attach as a left join ts_feed as f on a.row_id=f.feed_id' )->where ( $map )->getField ( 'attach_id' )) {
+		if ($max_id > 0 && M ()->table ( C( 'DB_PREFIX' ) . 'attach as a left join ' .C( 'DB_PREFIX' ) . 'feed as f on a.row_id=f.feed_id' )->where ( $map )->getField ( 'attach_id' )) {
 			$html .= '<a class="next-page mt20 left" onClick="get_feed_img(1)"><i class="arrow-left"></i>上一页</a>';
 		}
 		
@@ -1097,7 +1097,7 @@ class ProfileAction extends Action {
 				$min_id 
 		);
 		
-		if (M ()->table ( 'ts_attach as a left join ts_feed as f on a.row_id=f.feed_id' )->where ( $map )->getField ( 'attach_id' )) {
+		if (M ()->table ( C( 'DB_PREFIX' ) . 'attach as a left join ' . C( 'DB_PREFIX' ) . 'feed as f on a.row_id=f.feed_id' )->where ( $map )->getField ( 'attach_id' )) {
 			$html .= '<a class="next-page mt20 right" onClick="get_feed_img(0)">下一页<i class="arrow-right"></i></a>';
 		}
 		

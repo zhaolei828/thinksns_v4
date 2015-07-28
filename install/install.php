@@ -448,7 +448,7 @@ $fp = fopen(THINKSNS_ROOT.'/config/'.$thinksns_config_file, 'wb');
 $configfilecontent = <<<EOT
 <?php
 if (!defined('SITE_PATH')) exit();
-\$conf = include CONF_PATH . '/thinksns.conf.php';
+\$conf = include dirname(__FILE__) . '/thinksns.conf.php';
 return array_merge(array(
 	// 数据库常用配置
 	'DB_TYPE'       => 'mysql',       // 数据库类型

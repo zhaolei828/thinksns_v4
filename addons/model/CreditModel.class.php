@@ -203,7 +203,7 @@ class CreditModel extends Model {
 	 *        	reset:按照操作的值直接重设积分值，整型：作为操作的系数，-1可实现增减倒置
 	 * @return Object
 	 */
-	public function setUserCredit($uid, $action, $type = 1, $des) {
+	public function setUserCredit($uid, $action, $type = 1, $des = array()) {
 		if (! $uid) {
 			$this->info = false;
 			return $this;

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
  * OpenSociax 核心流程控制文件
  * @author  liuxiaoqing <liuxiaoqing@zhishisoft.com>
@@ -24,8 +24,8 @@ tsconfig(include CONF_PATH.'/router.inc.php');
 
 if(!isset($_REQUEST['app']) && !isset($_REQUEST['mod']) && !isset($_REQUEST['act'])){
 	$ts['_app'] = 'public';
-	$ts['_mod'] = 'Passport';
-	$ts['_act'] = 'login';
+	$ts['_mod'] = 'Index';
+	$ts['_act'] = 'index';
 }else{
 	$ts['_app'] = isset($_REQUEST['app']) && !empty($_REQUEST['app'])?$_REQUEST['app']:tsconfig('DEFAULT_APP');
 	$ts['_mod'] = isset($_REQUEST['mod']) && !empty($_REQUEST['mod'])?$_REQUEST['mod']:tsconfig('DEFAULT_MODULE');

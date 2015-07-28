@@ -17,6 +17,10 @@ body {word-wrap: break-word; background:#f1f2f3;}
 body{_background-image:url(about:blank);   
    _background-attachment:fixed;}
 
+p {
+	word-break: break-all;
+}
+
 /*背景半透明*/
 .o_000_3{
      display:block;

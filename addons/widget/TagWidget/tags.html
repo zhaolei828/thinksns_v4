@@ -7,7 +7,7 @@
 		<dd style="padding-top:6px">
 		<volist name="vo.child" id="v">
 			<php>if(!in_array($v['id'], $selectedIds)) {</php>
-			<a id="user_category_{$v['id']}" href="javascript:;" onclick="return tagsTs.add(\'{$v['title']}\', {$v['id']});" class="tag-bg<php>if(in_array($v['title'],$tags)){echo ' current';}</php>"><span>{$v.title}</span></a>
+			<a id="user_category_{$v['id']}" tag_name="{$v.title}" href="javascript:;" onclick="return tagsTs.add(\'{$v['title']}\', {$v['id']});" class="tag-bg<php>if(in_array($v['title'],$tags)){echo ' current';}</php>"><span>{$v.title}</span></a>
 			<php>}</php>
 		</volist>
 		</dd>
@@ -22,19 +22,19 @@
 	<div class="Tag_list02">
 		<div class="tag-lists">
 		<ul id="post_tag_list" class="taglist">
-			<volist name="tags" id="vo">
+			<volist name="tags_my" id="vo">
 			<li rel="{$key}"><a class="tag tag-bg" href="javascript:;" style="float:left;"><span>{$vo}<i class="ico-close1" title="删除" onclick="return tagsTs.deleteTag({$key})" href="#"></i></span></a></li>
 			</volist>
 		</ul>
 		</div>
-<!-- 		<div id="post-tag-input-holder" class="add-tag">
+		<div id="post-tag-input-holder" class="add-tag">
 			<input class="post-tag-input" id="post_tag_input" type="text" value="{:L('PUBLIC_TAG_TIPS')}" onfocus="if(this.value == '{:L('PUBLIC_TAG_TIPS')}')this.value='';" onblur="if(this.value == '') this.value='{:L('PUBLIC_TAG_TIPS')}';" />
-		</div> -->
+		</div>
 	</div>
         </div></dd>
     </dl>
 </div>
-<input type="hidden" name="{$apptable}_tags" id="ts_tag_search_value" value="{$tags_my}" />
+<input type="hidden" name="{$apptable}_tags" id="ts_tag_search_value" value="{$tags_my_ids}" />
 <input type="hidden" name="{$apptable}_row_id" value="{$row_id}" id="user_id" />
 
 <script type="text/javascript"> 
@@ -114,10 +114,10 @@ tagsTs.add = function(tagName, category_id)
 	var _this = this;
 	if(row_id) {
 		$.post(U('widget/Tag/getTagId'), {'appname':appname, 'apptable':apptable, 'name':tagName}, function(res) {
+			var tagId = parseInt(res.data);
+			var tagArr = $('#ts_tag_search_value').val().split(',');
 			if(res.status == 1) {
-				var tagId = parseInt(res.data);
 				// 验证是否重复加入标签
-				var tagArr = $('#ts_tag_search_value').val().split(',');
 				for(var i in tagArr) {
 					if(tagArr[i] == tagId) {
 						ui.error('标签已存在');
@@ -133,10 +133,11 @@ tagsTs.add = function(tagName, category_id)
 				ui.error(res.info);
 				return false;
 			}
-			_this.updateValue();
+			_this.updateValue(tagId);
 		}, 'json');
 	}
 };
+
 /**
  * 更新搜索标签后的值
  * @return void
@@ -146,18 +147,19 @@ tagsTs.updateValue = function()
 	var _this = this;
 	var value = [];
 	var tmp = {};
-	$('#post_tag_list li').each(function(i, n) {
-		var tagId = $(n).attr('rel'); 
-		value.push(tagId);
-		tmp[tagId] = _this.hashList[tagId];
-	});
-	this.hashList = tmp;
 	$('a[id*="user_category_"]').removeClass('current');
-	for (var i in this.hashList) {
-		$('#user_category_' + this.hashList[i]).addClass('current');
-	}
+	$('#post_tag_list li').each(function(i, n) {
+		var li = $(this);
+		var tagId = $(n).attr('rel'); 
+		var name = li.text();
+		value.push(tagId);
+
+		$("a[tag_name='"+name+"']").addClass('current');
+	});
+
 	$('#ts_tag_search_value').val(value.join(','));
 };
+
 /**
  * 移除已添加标签
  */

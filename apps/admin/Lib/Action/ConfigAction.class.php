@@ -57,7 +57,7 @@ class ConfigAction extends AdministratorAction {
 				'site_footer',
 				'site_footer_des',
 				'site_logo',
-				'site_logo_w3g',
+				// 'site_logo_w3g',
 				'site_qr_code',
 				'sina_weibo_link',
 				'login_bg',

@@ -206,6 +206,8 @@ function bbcodewap($message){
     
     $message = h($message);
 
+    $message = wapFormatContent($message);
+
     return $message;
 }
 

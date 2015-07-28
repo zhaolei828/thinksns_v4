@@ -44,17 +44,25 @@ class PublicAction extends Action {
         // 登录验证
         $passport = model('Passport');
         //载入站点配置全局变量
-        if($GLOBALS['ts']['site']['site_logo_w3g']==''){
-            $w3gLogoUrl='img/logo.png';
-        }else{
-            $attach = model('Attach')->getAttachById($GLOBALS['ts']['site']['site_logo_w3g']);
-            $w3gLogoUrl = getImageUrl($attach['save_path'].$attach['save_name']);
+        // if($GLOBALS['ts']['site']['site_logo_w3g']==''){
+        //     $w3gLogoUrl='img/logo.png';
+        // }else{
+        //     $attach = model('Attach')->getAttachById($GLOBALS['ts']['site']['site_logo_w3g']);
+        //     $w3gLogoUrl = getImageUrl($attach['save_path'].$attach['save_name']);
+        // }
+
+        $logo = '';
+        if (($logo = model('Xdata')->get('admin_Mobile:w3gLogo'))) {
+        	$logo = getAttachUrlByAttachId($logo['logo']);
         }
-        $this->assign('w3gLogoUrl',$w3gLogoUrl);
-        // dump($w3gLogoUrl);exit();
 
-
+        $this->assign('logo', $logo);
         $this->assign('is_register_open', $this->isRegisterOpen() ? '1' : '0');
+
+        // # 幻灯
+        $list = D('w3g_slide_show')->field('`image`, `url`')->select();
+        $this->assign('slide', $list);
+
         $this->display();
     }
 

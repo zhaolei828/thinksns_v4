@@ -123,8 +123,8 @@ class AdminAction extends AdministratorAction
         $this->pageTab[] = array('title' => '广告管理', 'tabHash' => 'ads', 'url' => U('cat/Admin/ads'));
       /*$this->pageTab[] = array('title' => '添加广告', 'tabHash' => 'addAd', 'url' => U('cat/Admin/addAd'));
         $this->pageTab[] = array('title' => '自助升级', 'tabHash' => 'update', 'url' => U('cat/Admin/update'));*/
-        $this->pageTab[]=array('title'=>'勉励捐助','tabHash'=>'support','url'=>U('cat/Admin/support'));
-        $this->pageTab[] = array('title' => '想天工作室', 'tabHash' => 'online', 'url' => U('cat/Admin/online'));
+        //$this->pageTab[]=array('title'=>'勉励捐助','tabHash'=>'support','url'=>U('cat/Admin/support'));
+        //$this->pageTab[] = array('title' => '想天工作室', 'tabHash' => 'online', 'url' => U('cat/Admin/online'));
 
     }
 

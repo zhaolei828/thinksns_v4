@@ -60,7 +60,7 @@ core.multimage = {
 				$(_this.obj.parentModel).attr('unid', res.unid)
 				// 定位属性
 				var pos = $(_this.obj).offset();
-				$('#multi_image').css({top:(pos.top+5)+"px",left:(pos.left-5)+"px","z-index":998});
+				$('#multi_image').css({top:(pos.top+5)+"px",left:(pos.left-5)+"px","z-index":1001});
 			}
 		}, 'json');
 		// body点击事件绑定

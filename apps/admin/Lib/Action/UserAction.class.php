@@ -57,7 +57,7 @@ class UserAction extends AdministratorAction {
 		// 列表批量操作按钮
 		$this->pageButton[] = array('title'=>L('PUBLIC_SEARCH_USER'),'onclick'=>"admin.fold('search_form')");
 		$this->pageButton[] = array('title'=>L('PUBLIC_TRANSFER_USER_GROUP'),'onclick'=>"admin.changeUserGroup()");
-		$this->pageButton[] = array('title'=>L('PUBLIC_DELETE_USERS'),'onclick'=>"admin.delUser()");
+		$this->pageButton[] = array('title'=>'禁用用户','onclick'=>"admin.delUser()");
 		// 转移用户部门，如果需要请将下面的注释打开
 		// $this->pageButton[] = array('title'=>L('PUBLIC_TRANSFER_DEPARTMENT'),'onclick'=>"admin.changeUserDepartment()");
 		$this->displayList($listData);

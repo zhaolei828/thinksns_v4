@@ -1,7 +1,7 @@
 <?php
 return array (
-  'iswaf_database' => 'E:\\phpwww\\thinksns_v4/data/iswaf/',
-  'iswaf_connenct_key' => '83779f278a8c5da63916d7738d7882dc',
+  'iswaf_database' => 'D:\\wamp\\www\\ts4/data/iswaf/',
+  'iswaf_connenct_key' => '65de40af0686039b9f1654c781d6ac54',
   'iswaf_status' => 1,
   'defences' => 
   array (

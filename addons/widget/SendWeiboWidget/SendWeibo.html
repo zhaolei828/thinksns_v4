@@ -71,12 +71,15 @@
     </div>
   </div>
 </div>
+<?php elseif($GLOBALS['ts']['mid']):?>
+<div class="send_weibo">
+  <div class="box-purview"><div class="nologin"><i class="ico-error"></i>您没有权限发布分享</div></div>
+</div>
 <?php else: ?>
 <div class="send_weibo">
   <div class="box-purview"><div class="nologin"><i class="ico-error"></i>您还未登录，请<a class="nologin-a" href="javascript:ui.quicklogin();">&nbsp;登录</a>&nbsp;or&nbsp;<a class="nologin-a" href="{:U('public/Register/index')}">注册</a></div></div>
 </div>
 <?php endif; ?>
-
 <!-- 分享分享/分享发布框 -->
 <?php elseif($send_type =='repost_weibo'): ?>
 <div model-node="weibo_post_box" class="clearfix">

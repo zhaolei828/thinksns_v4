@@ -230,7 +230,30 @@ document.onkeydown=inactiveF5;
 	</tr>
 
 </table>
+<script type="text/javascript">
+$(function() {
+	var upgrade = function() {
+		var upgrade = $('#LeftMenu').find('li').find('a:contains(在线升级)');
+		upgrade.css('position', 'relative');
+		upgrade.html(upgrade.text() + '<span></span>');
+		upgrade.find('span').css({
+			"color"            : "#f00",
+			"background-color" : "#f00",
+			"width"            : "6px",
+			"height"           : "6px",
+			"display"          : "inline-block",
+			"border-radius"    : "10px",
+			"overflow"         : "hidden",
+			"position"         : "absolute",
+			"top"              : "0",
+			"margin"           : "15px 0 0 2px"
+		});
+	}
 
+	$.get('{:U('admin/Upgrade/ajxjCheck')}', function(data) {
+		data.status == 2 && upgrade();
+	}, 'json');
+});
+</script>
 </body>
-
 </html>

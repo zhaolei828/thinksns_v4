@@ -101,6 +101,12 @@ class BaseAction extends Action {
 		// 用户资料
 		$this->profile = api ( 'User' )->data ( $data )->show ();
 		$this->assign ( 'profile', $this->profile );
+
+		$logo = '';
+        if (($logo = model('Xdata')->get('admin_Mobile:w3gLogo'))) {
+        	$logo = getAttachUrlByAttachId($logo['logo']);
+        }
+        $this->assign('logo', $logo);
 		
 		return;
 	}

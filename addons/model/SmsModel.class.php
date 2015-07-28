@@ -55,6 +55,7 @@ class SmsModel extends Model {
 				break;
 			
 			case 'false':
+				break;
 			default:
 				$return = false;
 				break;

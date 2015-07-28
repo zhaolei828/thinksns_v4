@@ -54,21 +54,17 @@
     <!--焦点图-->
     <div class="focus">
         <div class="flicking_con">
-            <i class=""></i>
-            <i class=""></i>
-            <i class=""></i>
+            <volist id="list" name="slide">
+                <i class=""></i>
+            </volist>
         </div>
         <div class="main_image">
-            <ul style="width: 100%; overflow: visible;">
-                <li style="float: none; display: block; position: absolute; top: 0px; left: -5760px; width: 1920px;">
-                    <img src="__APP__/images/1.jpg" class="focus-img"/>
-                </li>
-                <li style="float: none; display: block; position: absolute; top: 0px; left: -5760px; width: 1920px;">
-                    <img src="__APP__/images/2.png" class="focus-img"/>
-                </li>
-                <li style="float: none; display: block; position: absolute; top: 0px; left: -5760px; width: 1920px;">
-                    <img src="__APP__/images/3.jpg" class="focus-img"/>
-                </li>
+            <ul style="width: 100%; overflow: visible;" id="medz-slide-show">
+                <volist id="list" name="slide">
+                    <li style="float: none; display: block; position: absolute; top: 0px; left: -5760px; width: 1920px;">
+                        <img id="medz-slide-click" class="focus-img" src="{:getImageUrlByAttachId($list['image'], 700, 380)}" medz-url="{$list['url']}">
+                    </li>
+                </volist>
             </ul>
         </div>
     </div>
@@ -448,7 +444,6 @@
             });
         </script>
     </div>
-
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -473,7 +468,14 @@ $(document).ready(function(){
 		oldonload && oldonload();
 		$(".main_image").height($(".focus-img:first").height());
 	}
+
+    /* 图片点击事件 */
+    $('#medz-slide-show').on('click', '#medz-slide-click', function() {
+        var $this = $(this);
+        $this.attr('medz-url') && (function() {
+            window.open($this.attr('medz-url'));
+        })();
+    });
 });
 </script>
-
-    <include file="footer_public" />
+<include file="footer_public" />

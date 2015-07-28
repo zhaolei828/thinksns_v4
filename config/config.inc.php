@@ -1,6 +1,6 @@
 <?php
 if (!defined('SITE_PATH')) exit();
-$conf = include CONF_PATH . '/thinksns.conf.php';
+$conf = include dirname(__FILE__) . '/thinksns.conf.php';
 return array_merge(array(
 	// 数据库常用配置
 	'DB_TYPE'       => 'mysql',       // 数据库类型
@@ -13,6 +13,6 @@ return array_merge(array(
 	'DB_PORT'       => 3306,        // 数据库端口
 	'DB_PREFIX'     => 'ts_',// 数据库表前缀（因为漫游的原因，数据库表前缀必须写在本文件）
 	'DB_CHARSET'    => 'utf8',      // 数据库编码
-	'SECURE_CODE'   => '292055a924e960422',  // 数据加密密钥
+	'SECURE_CODE'   => '568655b08da1a354d',  // 数据加密密钥
 	'COOKIE_PREFIX' => 'TS4_',      // # cookie
 ), $conf);
