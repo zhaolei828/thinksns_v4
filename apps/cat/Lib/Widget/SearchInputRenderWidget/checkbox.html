@@ -1,0 +1,63 @@
+<ul class="cat_searh">
+    <php>
+        $t=array();
+        $t=$_GET;
+        $t[$field['name']]='';
+        $_tj= $t;
+    </php>
+    <if condition="$_GET[$field['name']] eq ''">
+        <li class="f12px c333  mr10 cat_search_active br3"><a href="{:U('cat/Index/li',$_tj)}">全部</a>
+        </li>
+        <else/>
+        <li class="f12px c333  mr10  br3"><a href="{:U('cat/Index/li',$_tj)}">全部</a>
+        </li>
+    </if>
+    <volist name="field['values']" id="tj">
+        <php>
+            $get=$_GET;//获取到get参数，并放入临时变量中
+
+
+            if($_GET[$field['name']] == ''){
+            //当前是选中全部的情况,那就直接设为当前值即可
+            $get[$field['name']]=$key;
+            $_tj= $get;
+            }
+            else{
+
+            $t_value=$_GET[$field['name']];//从Get中获取当前字段的值
+            $t_value_array=explode(',',$t_value);//当前字段在GET中的值的数组表示
+            $is_active=in_array($key,$t_value_array);//如果便利的值在值的数组中
+
+
+            if($is_active){
+            foreach($t_value_array as $cur =>$v)//找到
+            {
+            if($key==$v)
+            {
+
+             unset($t_value_array[$cur]);
+            }
+            }
+            $get[$field['name']]=implode(',',$t_value_array);
+            $_tj= $get;
+            }
+            else{
+            $t_value_array[]=$key;
+            $get[$field['name']]=implode(',',$t_value_array);
+            $_tj= $get;
+            }
+            }
+
+            // ($_GET[$field['name']] eq $key )AND($_GET[$field['name']] neq '')
+        </php>
+        <if condition="$is_active">
+            <li class="f12px c333  mr10  cat_search_active br3>
+        "><a href="{:U('cat/Index/li',$_tj)}">{$tj}</a></li>
+            <else/>
+            <li class="f12px c333  mr10   br3>
+        "><a href="{:U('cat/Index/li',$_tj)}">{$tj}</a></li>
+        </if>
+
+
+    </volist>
+</ul>

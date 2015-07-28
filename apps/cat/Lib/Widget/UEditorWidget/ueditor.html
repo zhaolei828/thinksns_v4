@@ -1,0 +1,13 @@
+
+<script type="text/plain" name="{$name}" id="id_{$name}">{$content}</script>
+<script>var {$id} = new UE.ui.Editor({
+    textarea:"{$name}",
+    toolbars: [
+        {$toolbars}
+    ],
+    initialFrameWidth:{$width}, zIndex: {$z_index},
+    initialFrameHeight: {$height},
+    autoHeightEnabled: false
+});
+{$id}.render("id_{$name}");
+</script>

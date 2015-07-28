@@ -1,0 +1,23 @@
+<div class="mb10 c_panel mr10 " style="background: #f5f5f5;">
+    <ul class="nav_left " style="padding-top: 0">
+        <li class="c_active">
+            <a
+              <if condition="ACTION_NAME eq 'my'"> class="current_my"</if>
+                    href="{:U('cat/Center/my')}">发布的信息</a>
+
+            <div class="underline"></div>
+        </li>
+        <li><a
+            <if condition="ACTION_NAME eq 'fav'"> class="current_my"</if>
+                href="{:U('cat/Center/fav')}">收藏的信息</a>
+
+            <div class="underline"></div>
+        </li>
+
+        <li><a
+            <if condition="(ACTION_NAME eq 'rec') OR (ACTION_NAME eq 'send') OR (ACTION_NAME eq 'post')"> class="current_my"</if>
+                href="{:U('cat/Center/rec')}">我的信箱</a></li>
+    </ul>
+    <div class="clearfix"></div>
+
+</div>

@@ -1,0 +1,40 @@
+<include file="../Public/_cat_header"/>
+
+<div id="page-wrap">
+    <div id="main-wrap">
+        <!--导航栏-->
+        <include file="../Public/_navbar"/>
+        <!--导航栏end-->
+        <div class="mb10 clearfix" >
+            <div id="col3" class="st-index-right">
+                {:W('MxAd',array('name'=>'cat_index_right_up','description'=>'分类信息首页右侧推荐上方广告'))}
+                <div class="mb10">
+                    <php>
+                        $all_entitys = D('cat_entity')->order('sort desc')->findAll();
+                    </php>
+                    <volist name="all_entitys" id="vo">
+                        {:W('InfoList',array('name'=>$vo['name'],'type'=>'limit','order'=>'cTime desc',num=>'5',recom=>true, 'tpl'=>'recom'))}
+                    </volist>
+                </div>
+                <div class="clearfix"></div>
+                {:W('MxAd',array('name'=>'cat_index_right_down','description'=>'分类信息首页右侧推荐下方广告'))}
+            </div>
+            <div id="col5" >
+                <div class="mr20" style="float: left;">
+                    <div class="mb10">{:W('MxAd',array('name'=>'cat_index_ad_down',width=>668,'description'=>'分类信息首页公告下方广告'))}</div>
+                    <volist name="entitys" id="vo">
+                        <div class="mb10 c_panel" style="min-height: 300px">
+                            <h1 class="cat_ul_title mb10">L{$i} &nbsp;&nbsp;&nbsp;{$vo.alias}</h1>
+                            <div class="mb10" >
+                                {:W('InfoList',array('name'=>$vo['name'],'type'=>'limit','order'=>'cTime desc',num=>'5'))}
+                            </div>
+                        </div>
+
+                    </volist>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<include file="__THEME__/public_footer"/>

@@ -1,0 +1,63 @@
+<include file="../Public/_cat_header"/>
+<link href="__APP__/center.css" type="text/css" rel="stylesheet">
+<div id="page-wrap">
+    <div id="main-wrap">
+        <include file="../Public/_navbar"/>
+        <div class="mb10 clearfix left mr10" style="width: 200px">
+            <include file="./_left"/>
+        </div>
+        <div class="right c_panel" style="width: 760px">
+            <ul class="cat_m_entitys">
+                <li>
+                    <a class="current_my" href="{:U('cat/Center/rec')}">收到的信息</a>
+                </li>
+                <li><a href="{:U('cat/Center/send')}">发送的信息</a></li>
+                <li class="splitter"></li>
+                <li><a href="{:U('cat/Center/post')}">发送信息</a></li>
+            </ul>
+            
+            <div class="clearfix"></div>
+            <div class="underline_x"></div>
+            
+            <div class="pd10 mb10">
+                <ul class="c_ul_c_send_info" style="min-height: 600px;">
+                    <volist name="rec.data" id="vo">
+                        <li>
+                            <p class="lh28"><a event-node="read_info" event-args="id={$vo.send_id}"
+                                            class="c_ul_c_send_title" target="_blank"
+                                            href="{:U('cat/Index/info',array('info_id'=>$vo['info_id']))}">
+                                <if condition="$vo['readed']">
+                                    <span class="cgrey">【已阅读】{$vo.info_id|getInfoFirstValue}</span>
+                                    <else/>
+
+                                    <span>【未阅读】</span>{$vo.info_id|getInfoFirstValue}
+                                </if>
+                            </a>
+                            </p>
+                            <p class="lh16"><strong>发送者：</strong>&nbsp;&nbsp;<a target="_blank" href="{$vo.user.space_url}"
+                                                                                event-node="face_card" uid="{$vo.user.uid}"><img
+                                    class="mr10" src="{$vo.user.avatar_tiny}">{$vo.user.uname}</a>
+                                <br/><strong>来源信息：</strong>&nbsp;&nbsp;<a target="_blank"
+                                                                        href="{:U('cat/Index/info',array('info_id'=>$vo['s_info_id']))}">{$vo.s_info_id|getInfoFirstValue}</a>
+                            </p>
+
+                            <p class="lh16">
+                                <strong>附言：</strong>{$vo.content}
+                            </p>
+
+                            <p class="cgrey f12px">{$vo.cTime|friendlyDate}</p></li>
+
+                    </volist>
+                </ul>
+                <div class="page">{$rec.html}</div>
+            </div>
+
+            <div class="mb10 cat_ul_info pd10" style="text-align: right">
+                本页信息每隔10秒更新一次 共收到【{$rec.count}】条信息 共【{$rec.totalPages}】页
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<include file="__THEME__/public_footer"/>
