@@ -1,7 +1,0 @@
-<if condition="$info_id neq ''">
-    <textarea id="{$field.name}" name="{$field.name}"  <if condition="$field.args neq ''"> event-node="textarea" event-args="{$field.args}"</if>  class="{$class}" >{$field_value}</textarea>
-
-    <else/>
-    <textarea id="{$field.name}" name="{$field.name}"  <if condition="$field.args neq ''"> event-node="textarea" event-args="{$field.args}"</if>  class="{$class}" >{$field.default_value}</textarea>
-
-</if>
