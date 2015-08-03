@@ -79,6 +79,23 @@ class FeedAction extends Action {
 	 * 发布分享操作，用于AJAX
 	 *
 	 * @return json 发布分享后的结果信息JSON数据
+         * url:http://6jlife.com/index.php?app=public&mod=Feed&act=PostFeed
+         * 入参:
+         * body:"dddddddd"
+         * type:"postimage"
+         * app_name:"public"
+         * channel:""
+         * content:""
+         * attach_id:"|104|"
+         * video_id:""
+         * videourl:""
+         * channel_id:""
+         * 返回结果：
+         * status:1
+         * data:""
+         * feedId:10
+         * is_audit:1
+         * 
 	 */
 	public function PostFeed() {
 		// 返回数据格式

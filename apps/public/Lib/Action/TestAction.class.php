@@ -541,7 +541,7 @@ class TestAction extends Action{
 					'部发表于18世纪的法国传奇小说，种下了魔力的种子，从文字到影像穿越时空开花结果。从法国宫廷、美国校园到韩国贵族，再到中国老上海，历经数个电影版本 的演绎，萦绕在《危险关系》戏里戏外的故事，自然生长，如镜子般折射时代、国别、名利场，一次次赋予古老的原著新鲜的生命力。本周四，章子怡、',
 					'分享图片',
 				);
-		$attach = array(2352, 2351, 2350, 2349);
+		$attach = array(96, 97, 102, 93);
 		$data['content'] = '';
 		$type = 'postimage';
 		$app = 'public';
@@ -939,4 +939,13 @@ class TestAction extends Action{
 	public function info(){
 		$c = model('Credit')->setUserCredit($this->mid,'user_login','1',array('user'=>'<a href="http://www.baidu.com">呵呵</a>','content'=>'<a href="http://www.google.com">hh</a>'));
 	}
+        
+        public function imgurl(){
+            $params['file_url'] = 'http://demo.thinksns.com/ts4/data/upload/2015/0803/13/55bef8dcc73c6.jpg';
+            $params['save_to'] = 'E:\phpwww\thinksns_v4\data\upload';
+            //Addons::createAddonShow('DownloadFileByUrlHooks','download_remote_file_with_curl');
+            Http::curl_download($params['file_url'], $params['save_to'].'\55bef8dcc73c6.jpg');
+            
+            print_r($params);
+        }
 }

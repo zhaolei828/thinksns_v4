@@ -27,8 +27,6 @@ class SinaWeiboFavoritesImportHooks extends Hooks {
         }else{
             $this->importFavoritesWeibo(); 
         }
-        $this->assign('code_url',$code_url);
-        $this->display('config'); 
     }
     public function importFavoritesWeibo(){
         include_once $this->path . "/lib/config.php";

@@ -11,10 +11,27 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        xxx
-        {$oauth_result}
+        <h1>{$oauth_result}</h1>
+    <if condition="($oauth_code eq 1)">
         <pre>
-            <php>print_r($ms);</php>
+            <?php print_r($ms); ?>
         </pre>
+    </if>
+    <volist name="ms['favorites']" id="item" empty="暂时没有数据" >
+        <div style="padding:10px;margin:5px;border:1px solid #ccc;">
+            @{$item.status.user.name}：{$item.status.text}<br/>
+            <volist name="item['status']['pic_urls']" id="pic_item">
+            <img src="{$pic_item.thumbnail_pic}"/>  
+            </volist>
+            <?php if( is_array( $item['status']['retweeted_status'] ) ): ?>
+            <div style="padding:10px;margin:5px;">
+                @{$item.status.retweeted_status.user.name}：{$item.status.retweeted_status.text}<br/>
+                <volist name="item['status']['retweeted_status']['pic_urls']" id="ret_pic_item">
+                <img src="{$ret_pic_item.thumbnail_pic}"/>
+                </volist>
+            </div> 
+            <?php endif; ?>
+        </div>
+    </volist>
     </body>
 </html>
