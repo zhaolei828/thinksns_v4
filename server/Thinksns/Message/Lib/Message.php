@@ -584,6 +584,23 @@ class Message
                         $member_list[$i]['mtime'] = $row['list_ctime'];
                     }
                 }
+                $return[$key]['last_message'] = array();
+                if($rs['last_message']){
+                    $last_message = @unserialize($rs['last_message']);
+                    if(is_array($last_message)){
+                        $return[$key]['content'] = isset($last_message['content'])?$last_message['content']:'';
+                        $return[$key]['type'] = isset($last_message['type'])?$last_message['type']:'text';
+                        $return[$key]['mtime'] = isset($last_message['mtime'])?$last_message['mtime']:'0';
+                        if(isset($last_message['from_uid'])){
+                            $return[$key]['from_uid'] = $last_message['from_uid'];
+                            $return[$key]['from_uname'] = @(string)$users[$last_message['from_uid']]['uname'];
+                        }else{
+                            $return[$key]['from_uid'] = 0;
+                            $return[$key]['from_uname'] = '';
+                        }
+                    }
+
+                }
                 $return[$key]['member_num'] = count($rs['member_num']);
                 $return[$key]['member_list'] = $member_list;
             }

@@ -14,18 +14,22 @@
   <div class="reg-wrap">
     <div class="reg-tab-menu">
       <ul>
+      <?php if(in_array($config['account_type'], array('all', 'email'))) { ?>
         <li><a href="{:U('public/Register/index','t=email')}" 
           
           <php>if($_GET['t']!='phone'){</php>
           class="cur"
           <php>}</php>
           >邮箱注册</a></li>
+      <?php } ?>
+      <?php if(in_array($config['account_type'], array('all', 'phone'))) { ?>
         <li><a href="{:U('public/Register/index','t=phone')}" 
           
           <php>if($_GET['t']=='phone'){</php>
           class="cur"
           <php>}</php>
           >手机注册</a></li>
+      <?php } ?>
       </ul>
     </div>
     <div class="reg-main">

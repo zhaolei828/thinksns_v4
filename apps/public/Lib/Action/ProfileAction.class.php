@@ -21,6 +21,14 @@ class ProfileAction extends Action {
 			$this->uid = model ( 'User' )->where ( $map )->getField ( 'uid' );
 		}
 		$this->assign ( 'uid', $this->uid );
+
+		// # 微吧和频道开关检测
+		$weibaIfOpen   = model('App')->getAppByName('weiba');
+		$weibaIfOpen   = $weibaIfOpen['status'];
+		$channelIfOpen = model('App')->getAppByName('channel');
+		$channelIfOpen = $channelIfOpen['status'];
+		$this->assign('weibaIfOpen'  , $weibaIfOpen);
+		$this->assign('channelIfOpen', $channelIfOpen);
 	}
 	
 	/**

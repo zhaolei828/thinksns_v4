@@ -238,7 +238,7 @@ class SourceModel {
 		//新的应用评论机制 20130607
 		$info['source_user_info'] = model('User')->getUserInfo($data['app_uid']);
 		$info['source_url'] = $data['app_detail_url'];
-		$info['source_body'] = $data['app_detail_summary'];
+		$info['source_body'] = t($data['app_detail_summary']);
 		//dump($info);
 		return $info;
 	}

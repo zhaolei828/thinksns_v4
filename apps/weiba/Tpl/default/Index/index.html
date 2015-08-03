@@ -14,7 +14,7 @@
               <volist name="post_list['data']" id="vo">
                 <li>
                   <div class="post-img clearfix">
-                    <div class="f-post-img"><a href="{:U('weiba/Index/postDetail',array('post_id'=>$vo['post_id']))}"><img src="__UPLOAD__{$vo['index_img']}"/></a></div>
+                    <div class="f-post-img"><a href="{:U('weiba/Index/postDetail',array('post_id'=>$vo['post_id']))}"><img src="{$vo['index_img']}"/></a></div>
                   </div>
                   <div class="post-b">
                     <h2 class="mb15"> <a href="{:U('weiba/Index/postDetail',array('post_id'=>$vo['post_id']))}"><span>{$vo.title|getShort=20}</span></a>
@@ -37,8 +37,6 @@
                   </div>
                 </li>
               </volist>
-              <php>} else {</php>
-              <li>目前暂无信息！</li>
               <php>}</php>
             </ul>
           </div>

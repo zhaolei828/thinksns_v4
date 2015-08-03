@@ -54,8 +54,6 @@ class SmsModel extends Model {
 				$return = $this->_ihuyi($result);
 				break;
 			
-			case 'false':
-				break;
 			default:
 				$return = false;
 				break;

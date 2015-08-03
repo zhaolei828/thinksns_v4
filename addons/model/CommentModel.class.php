@@ -452,7 +452,7 @@ class CommentModel extends Model {
         $add['data'] = serialize($data['data']);
         $add['ctime'] = $_SERVER['REQUEST_TIME'];
         $add['client_type'] = isset($data['client_type']) ? intval($data['client_type']) : getVisitorClient();
-        $add['app_detail_summary'] = $data['app_detail_summary'];
+        $add['app_detail_summary'] = t($data['app_detail_summary']);
         $add['app_detail_url'] = $data['app_detail_url'];
     
         return $add;

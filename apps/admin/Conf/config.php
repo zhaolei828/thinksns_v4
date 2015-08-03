@@ -1,15 +1,16 @@
 <?php
 $menu = array(
     //后台头部TAB配置
-	'admin_channel'	=>	array(
-		'index'     => '首页', //L('PUBLIC_SYSTEM'),
-		'system'    => L('PUBLIC_SYSTEM'),
-		'user'      => L('PUBLIC_USER'),
-		'content'   => L('PUBLIC_CONTENT'),
-		'task'      => L('PUBLIC_TASK'),
-		'apps'      => L('PUBLIC_APPLICATION'),
-		'extends'   => '插件',//L('PUBLIC_EXPANSION'),
-		'mobile'    => '手机版',
+	'admin_channel'	  =>	array(
+		'index'       => '首页', //L('PUBLIC_SYSTEM'),
+		'system'      => L('PUBLIC_SYSTEM'),
+		'user'        => L('PUBLIC_USER'),
+		'content'     => L('PUBLIC_CONTENT'),
+		'task'        => L('PUBLIC_TASK'),
+		'apps'        => L('PUBLIC_APPLICATION'),
+		'extends'     => '插件',//L('PUBLIC_EXPANSION'),
+		'mobile'      => '手机版',
+		'application' => 'APP设置',
 		// 'weixin'    => '微信管理',
 	),
 	//后台菜单配置
@@ -122,6 +123,13 @@ $menu = array(
 	 			'LOGO'     => U('admin/Mobile/w3gLogo'),
 	 			'广场轮播' => U('admin/Mobile/w3gSlideShow'),
 	 			'关于我们' => U('admin/Mobile/w3gAbout'),
+	 		),
+	 	),
+
+	 	/* # APP seting */
+	 	'application' => array(
+	 		'seting' => array(
+	 			'发现轮播' => U('admin/Application/index'),
 	 		),
 	 	),
     )

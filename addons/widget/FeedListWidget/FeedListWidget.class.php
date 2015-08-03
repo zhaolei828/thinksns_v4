@@ -24,52 +24,73 @@ class FeedListWidget extends Widget {
 	 * @param
 	 *        	integer loadnew 是否加载更多 1:是 0:否
 	 */
-	public function render($data) {
-		$var = array ();
-		$var ['loadmore'] = 1;
-		$var ['loadnew'] = 1;
-		$var ['tpl'] = 'FeedList.html';
-// 		if($data['type']=='weiba'){
-// 			$var ['tpl'] = 'weibaList.html';
-// 		}
-// 		print_r($data);
-		is_array ( $data ) && $var = array_merge ( $var, $data );
-		
-		$weiboSet = model ( 'Xdata' )->get ( 'admin_Config:feed' );
-		$var ['initNums'] = $weiboSet ['weibo_nums'];
-		$var ['weibo_type'] = $weiboSet ['weibo_type'];
-		$var ['weibo_premission'] = $weiboSet ['weibo_premission'];
-		
-		// 查询是否有话题ID
-		if ($var ['topic_id']) {
-			$content = $this->getTopicData ( $var, '_FeedList.html' );
-		} else if ($var ['type'] == 'channel') {
-			if ($var ['channel'] = count ( D ( 'ChannelFollow', 'channel' )->getFollowList ( $GLOBALS ['ts'] ['mid'] ) )) {
-				$content = $this->getData ( $var, '_FeedList.html' );
+	public function render($data = array()) {
+		/* # 创建默认参数 */
+		$var = array(
+			'loadmore' => 1,
+			'loadnew'  => 1,
+			'tpl'      => 'FeedList.html'
+		);
+
+		/* # 合并自定义参数 */
+		is_array($data) and $var = array_merge($var, $data);
+		unset($data);
+
+		/* # 设置微博设置 */
+		$weiboSet = model('Xdata')->get('admin_Config:feed');
+		$var['initNums']         = $weiboSet['weibo_nums'];
+		$var['weibo_type']       = $weiboSet['weibo_type'];
+		$var['weibo_premission'] = $weiboSet['weibo_premission'];
+		unset($weiboSet);
+
+		/* # 查询是否有话题ID */
+		if ($var['topic_id']) {
+			$content = $this->getTopicData($var, '_FeedList.html');
+
+		/* # 查询默认数据 */
+		} else {
+			/* # 是否是频道 */
+			if ($var['type'] == 'channel') {
+				$sql = 'SELECT COUNT(`c`.`channel_category_id`) AS `num` FROM `%s` AS `f` LEFT JOIN `%s` AS `c` ON `f`.`channel_category_id` = `c`.`channel_category_id` WHERE `f`.`uid` = %d';
+				$sql = sprintf($sql, D('channel_follow')->getTableName(), D('channel_category')->getTableName(), intval($this->mid));
+				$num = D()->query($sql);
+				$num = array_shift($num);
+				$num = array_shift($num);
+				$var['channel'] = $num;
+				unset($sql, $num);
 			}
-		} else {
-			$content = $this->getData ( $var, '_FeedList.html' );
+
+			/* # 取得数据 */
+			$content = $this->getData($var, '_FeedList.html');
 		}
-		// 我关注的频道
-		// if ($var['type'] === 'channel') {
-		// $var['channel'] = ($content['count'] == 0) ? false : true;
-		// }
-		// 查看是否有更多数据
-		if (empty ( $content ['html'] )) {
-			// 没有更多的
-			$var ['list'] = '';
+
+		/* # 查看是否有更多数据 */
+		if (empty($content['html'])) {
+			$var['list'] = '';
+
+		/* # 解析数据 */
 		} else {
-			if(!$content['firstId']) $var['loadmore'] = 0;
-			$var ['list'] = $content ['html'];
-			$var ['lastId'] = $content ['lastId'];
-			$var ['firstId'] = $content ['firstId'] ? $content ['firstId'] : 0;
-			$var ['pageHtml'] = $content ['pageHtml'];
+			/* # 是有前置 */
+			$content['firstId'] or $var['loadmore'] = 0;
+
+			/* # 赋予数据 */
+			$var['list'] = $content['html'];
+			$var['lastId'] = $content['lastId'];
+			$var['firstId'] = intval($content['firstId']);
+			$var['pageHtml'] = $content['pageHtml'];
 		}
-		$content ['html'] = $this->renderFile ( dirname ( __FILE__ ) . "/" . $var ['tpl'], $var );
-		self::$rand ++;
-		unset ( $var, $data );
-		// 输出数据
-		return $content ['html'];
+
+		/* # 获取HTML内容 */
+		$content = $this->renderFile(__DIR__ . '/' . $var['tpl'], $var);
+
+		/* # 数量 + 1 */
+		self::$rand += 1;
+
+		/* # 注销变量 */
+		unset($var);
+
+		/* # 返回数据 */
+		return $content;
 	}
 	
 	/**
@@ -177,29 +198,6 @@ class FeedListWidget extends Widget {
 
 		$var['remarkHash'] = model('Follow')->getRemarkHash($this->mid);
 
-
-		// $var ['feed_key'] = t ( $var ['feed_key'] );
-		// $var ['cancomment'] = isset ( $var ['cancomment'] ) ? $var ['cancomment'] : 1;
-		// $var ['cancomment_old_type'] = array (
-		// 		'post',
-		// 		'repost',
-		// 		'postimage',
-		// 		'postfile',
-		// 		'weiba_post',
-		// 		'weiba_repost',
-		// 		'blog_post',
-		// 		'blog_repost',
-		// 		'event_post',
-		// 		'event_repost',
-		// 		'vote_post',
-		// 		'vote_repost',
-		// 		'photo_post',
-		// 		'photo_repost' 
-		// );
-		// // 获取分享配置
-		// $weiboSet = model ( 'Xdata' )->get ( 'admin_Config:feed' );
-		// $var = array_merge ( $var, $weiboSet );
-		// $var ['remarkHash'] = model ( 'Follow' )->getRemarkHash ( $GLOBALS ['ts'] ['mid'] );
 		$map = $list = array();
 		$type = $var ['new'] ? 'new' . $var ['type'] : $var ['type']; // 最新的分享与默认分享类型一一对应
 		
@@ -440,7 +438,7 @@ class FeedListWidget extends Widget {
 				$var ['followUids'] = array ();
 			}
 		}
-		$content ['pageHtml'] = $list ['html'];
+		$content ['pageHtml'] = $list['html'];
 		// 渲染模版
 		$content ['html'] = $this->renderFile ( dirname ( __FILE__ ) . "/" . $tpl, $var );
 		
@@ -456,96 +454,142 @@ class FeedListWidget extends Widget {
 	 *        	渲染的模板
 	 * @return array 获取分享相关模板数据
 	 */
-	private function getTopicData($var, $tpl = 'FeedList.html') {
-		$var ['cancomment'] = isset ( $var ['cancomment'] ) ? $var ['cancomment'] : 1;
-		// $var['cancomment_old_type'] = array('post','repost','postimage','postfile');
-		$var ['cancomment_old_type'] = array (
-				'post',
-				'repost',
-				'postimage',
-				'postfile',
-				'weiba_post',
-				'weiba_repost' 
+	private function getTopicData(array $var, $tpl = 'FeedList.html') {
+		/* # 判断 */
+		$var['cancomment'] or $var['cancomment'] = 1;
+
+		/* # Old type */
+		$var['cancomment_old_type'] = array(
+			'post',         /* 分享     */
+			'repost',       /* 回复分享 */
+			'postimage',    /* 分享图片 */
+			'postfile',     /* 分享文件 */
+			'weiba_post',   /* 微吧发表 */
+			'weiba_repost'  /* 微吧回复 */
 		);
-		$weiboSet = model ( 'Xdata' )->get ( 'admin_Config:feed' );
-		$var = array_merge ( $var, $weiboSet );
-		$var ['remarkHash'] = model ( 'Follow' )->getRemarkHash ( $GLOBALS ['ts'] ['mid'] );
-		$map = $list = array ();
-		$type = $var ['new'] ? 'new' . $var ['type'] : $var ['type']; // 最新的分享与默认分享类型一一对应
-		
-		// if ($var ['loadId'] > 0) { // 非第一次
-		// 	$topics ['topic_id'] = $var ['topic_id'];
-		// 	$topics ['feed_id'] = array (
-		// 			'lt',
-		// 			intval ( $var ['loadId'] ) 
-		// 	);
-		// 	$map ['feed_id'] = array (
-		// 			'in',
-		// 			getSubByKey ( D ( 'feed_topic_link' )->where ( $topics )->field ( 'feed_id' )->select (), 'feed_id' ) 
-		// 	);
-		// } else {
-		// 	$map ['feed_id'] = array (
-		// 			'in',
-		// 			getSubByKey ( D ( 'feed_topic_link' )->where ( 'topic_id=' . intval ( $var ['topic_id'] ) )->field ( 'feed_id' )->select (), 'feed_id' ) 
-		// 	);
-		// }
 
+		/* # 合并后台分享设置 */
+		$weiboSet = model('Xdata')->get('admin_Config:feed');
+		$var      = array_merge($var, $weiboSet);
+		unset($weiboSet);
+
+		/* # 获取指定用户的备注列表 */
+		$var['remarkHash'] = model('Follow')->getRemarkHash($this->mid);
+
+		/* # 初始where条件 */
 		$where = '`topic_id` = ' . intval($var['topic_id']);
-		$var['loadId'] > 0 and $where .= ' AND `feed_id` < ' . intval($var['loadId']);
-		$map['feed_id'] = array('IN', getSubByKey(D('feed_topic_link')->where($where)->field('`feed_id`')->select(), 'feed_id'));
 
+		/* # load id */
+		($var['loadId'] > 0) and $where .= ' AND `feed_id` < ' . intval($var['loadId']);
+
+		/* # 分享条件 */
+		$map = array(
+			'feed_id' => array(
+				'IN',
+				getSubByKey(D('feed_topic_link')->where($where)->field('`feed_id`')->select(), 'feed_id')
+			)
+		);
+		unset($where);
+
+		/* # 分享类型 */
 		empty($var['feed_type']) or $map['feed_type'] = t($var['feed_type']);
 
-		// if (! empty ( $var ['feed_type'] )) {
-		// 	$map ['type'] = t ( $var ['feed_type'] );
-		// }
+		/* # string where */
+		$map['_string'] = ' (`is_audit` = 1 OR (is_audit = 0 AND `uid` = ' . $this->mid . ')) AND `is_del` = 0';
+		/*$map ['_string'] = ' (is_audit=1 OR is_audit=0 AND uid=' . $GLOBALS ['ts'] ['mid'] . ') AND is_del = 0 ';*/
 
-		// $map['is_del'] = 0;
-		
-		$map ['_string'] = ' (is_audit=1 OR is_audit=0 AND uid=' . $GLOBALS ['ts'] ['mid'] . ') AND is_del = 0 ';
-		$list = model ( 'Feed' )->getList ( $map, $this->limitnums );
-		// 分页的设置
-		isset ( $list ['html'] ) && $var ['html'] = $list ['html'];
-		
-		if (! empty ( $list ['data'] )) {
-			$content ['firstId'] = $var ['firstId'] = $list ['data'] [0] ['feed_id'];
-			$content ['lastId'] = $var ['lastId'] = $list ['data'] [(count ( $list ['data'] ) - 1)] ['feed_id'];
-			$var ['data'] = $list ['data'];
-			
-			// 赞功能
-			$feed_ids = getSubByKey ( $var ['data'], 'feed_id' );
-			$var ['diggArr'] = model ( 'FeedDigg' )->checkIsDigg ( $feed_ids, $GLOBALS ['ts'] ['mid'] );
-			
-			$uids = array ();
-			foreach ( $var ['data'] as &$v ) {
-				switch ($v ['app']) {
-					case 'weiba' :
-						$v ['from'] = getFromClient ( 0, $v ['app'], '微吧' );
+		/* # 获取分享列表 */
+		$list = model('Feed')->getList($map, $this->limitnums);
+		unset($map);
+
+		/* # 分页设置 */
+		isset($list['html']) and $var['html'] = $list['html'];
+
+		/* # 如果有数据 */
+		if (!empty($list['data'])) {
+			/* # 第一条ID */
+			$first              = array_shift($list['data']);
+			$content['firstId'] = $var['firstId'] = $first['feed_id'];
+
+			/* # 将第一条数据还原 */
+			array_unshift($list['data'], $first);
+			unset($first);
+
+			/* # 最后一条 */
+			$last              = array_pop($list['data']);
+			$content['lastId'] = $var['lastId'] = $last['feed_id'];
+
+			/* # 将最后一条数据还原 */
+			array_push($list['data'], $last);
+			unset($last);
+
+			/* # 数据复制 */
+			$var['data'] = $list['data'];
+
+			/* # 赞功能，获取所有分享ID */
+			$feed_ids = getSubByKey($var['data'], 'feed_id');
+
+			/* # 指定用户是否赞了指定的分享 */
+			$var['diggArr'] = model('FeedDigg')->checkIsDigg($feed_ids, $this->mid);
+			unset($feed_ids);
+
+			/* # 定义储存用户uid的数组 */
+			$uids = array();
+
+			/* # 遍历数据 */
+			foreach ($var['data'] as $key => $value) {
+				/* # 判断来自客户端类型 */
+				switch ($value['app']) {
+					/* # 判断是否来自微吧 */
+					case 'weiba':
+						$var['data'][$key]['from'] = getFromClient(0, $value['app'], '微吧');
 						break;
-					default :
-						$v ['from'] = getFromClient ( $v ['from'], $v ['app'] );
+					
+					/* # 其他 */
+					default:
+						$var['data'][$key]['from'] = getFromClient($value['from'], $value['app']);
 						break;
 				}
-				! isset ( $uids [$v ['uid']] ) && $v ['uid'] != $GLOBALS ['ts'] ['mid'] && $uids [] = $v ['uid'];
+
+				/* # 加入UID */
+				if (!in_array($value['uid'], $uids) and $value['uid'] != $this->mid) {
+					array_push($uids, $value['uid']);
+				}
+
+				/* # 变量注销 */
+				unset($key, $value);
 			}
-			if (! empty ( $uids )) {
-				$map = array ();
-				$map ['uid'] = $GLOBALS ['ts'] ['mid'];
-				$map ['fid'] = array (
-						'in',
-						$uids 
+
+			/* # 默认数据 */
+			$var['followUids'] = array();
+
+			/* # 如果存在uids */
+			if (!empty($uids)) {
+				/* # 创建where条件 */
+				$map = array(
+					'uid' => $this->mid,
+					'fid' => array('IN', $uids)
 				);
-				$var ['followUids'] = model ( 'Follow' )->where ( $map )->getAsFieldArray ( 'fid' );
-			} else {
-				$var ['followUids'] = array ();
+
+				/* # 取得数据 */
+				$var['followUids'] = model('Follow')->where($map)->getAsFieldArray('fid');
+				unset($map);
 			}
+
+			/* # 注销变量 */
+			unset($uids);
 		}
+
+		/* # 取得分页数据 */
+		$content['pageHtml'] = $list['html'];
+
+		/* # 渲染的模板数据 */
+		$content['html'] = $this->renderFile(__DIR__ . '/' . $tpl, $var);
 		
-		$content ['pageHtml'] = $list ['html'];
+		/* # 注销变量 */
+		unset($var, $list);
 		
-		// 渲染模版
-		$content ['html'] = $this->renderFile ( dirname ( __FILE__ ) . "/" . $tpl, $var );
-		
+		/* # 返回数据 */
 		return $content;
 	}
 	

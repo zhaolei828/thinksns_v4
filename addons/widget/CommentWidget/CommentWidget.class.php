@@ -169,7 +169,7 @@ class CommentWidget extends Widget {
 		$data ['to_uid'] = intval($_POST['to_uid']);
 		$data ['ifShareFeed'] = intval($_POST['ifShareFeed']);
 		$data ['comment_old'] = intval($_POST['comment_old']);
-		$data ['app_detail_summary'] = h($_POST['app_detail_summary']);
+		$data ['app_detail_summary'] = t($_POST['app_detail_summary']);
                 
                 $source = model ( 'Source' )->getSourceInfo ( $data ['table'], $data ['row_id'], false, $data ['app'] );
                 $uid            = $source['uid'];

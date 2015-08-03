@@ -49,7 +49,7 @@ class Event
         //echo "client:{$_SERVER['REMOTE_ADDR']}:{$_SERVER['REMOTE_PORT']} ".
         //     "gateway:{$_SERVER['GATEWAY_ADDR']}:{$_SERVER['GATEWAY_PORT']}  ".
         //     "client_id:$client_id session:".json_encode($_SESSION)." onMessage:".$message."\n";
-
+echo $message,PHP_EOL.PHP_EOL;
         // 对客户端发送的json数据转换为php的数组
         $message_array = @json_decode($message, true)?:array();
 

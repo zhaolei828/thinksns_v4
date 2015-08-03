@@ -22,8 +22,12 @@ if(isset($_REQUEST['api_version'])){
 }
 
 //载入核心文件
-require(SITE_PATH.'/core/core.php');
+require(SITE_PATH . '/core/core.php');
 
 //实例化一个网站应用实例
-$App = new API();
-$App->run();
+$app = new App;
+$app->run();
+unset($app);
+// (new Api)->run();
+
+/* # The end */

@@ -36,17 +36,17 @@ core.face = {
 				 + '<div class="close hd"><a onclick=" $(\'#emotions\').remove()" class="ico-close" href="javascript:void(0)" title="'+L('PUBLIC_CLOSE')+'"> </a><span>'+L('PUBLIC_FACEING')+'</span></div>'
 				 + '<div class="faces_box" id="emot_content"><img src="'+ THEME_URL+'/image/load.gif" class="alM"></div></div></div></div>';
 			
-			//$(this.parentDiv).append(html);
-			$('body').append(html);
-			
-			var pos = $(this.faceObj).offset();
-			
-			$('#emotions').css({top:(pos.top+5)+"px",left:(pos.left-5)+"px","z-index":1001});
-			
+			var height = $(this.parentDiv).append(html).css('position', 'relative').height();
+			$('#emotions').css({
+				top: height + 5 + 'px',
+				left: "-25px",
+				zIndex: 1001,
+				margin: '0 0 0 -5px'
+			});
 
 			core.createImageHtml();
 			
-			$('body').bind('click',function(event){
+			$(this.parentDiv).bind('click',function(event){
 				var obj = "undefined" != typeof(event.srcElement) ? event.srcElement : event.target;
 				if($(obj).hasClass('face')){
 					return false;
@@ -55,25 +55,16 @@ core.face = {
 					$('#emotions').remove();
 				}
 			});
+
+			$(document).on('click', function(event) {
+				$('#emotions').remove();
+			});
 			
 			
 		},
 		face_chose:function(obj){
 			var imgtitle = $(obj).attr('title');
-			//var args =  M.getModelArgs(this.textarea);
 			this.textarea.inputToEnd( '['+imgtitle+']' );
-			
-//			if("undefined" == typeof(args.t) || args.t == 'feed'){
-//				this.textarea.focus();
-//				document.execCommand("insertImage",false,imgsrc);
-//				this.textarea.focus();
-//			}else{
-//				var emotion = '<img src="'+imgsrc+'"  data="'+imgsrc+'" />';
-//				var html = this.textarea.innerHTML + emotion;
-//				this.textarea.inputHTML = html; 
-//				this.textarea.innerHTML = html;
-//				this.textarea.focus();
-//			}
 
 			if("undefined" != typeof(core.weibo)){
 				if (typeof this.callback !== 'undefined') {

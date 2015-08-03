@@ -36,6 +36,8 @@ return array (
 		'public/Feed/showBigImage' => true,
 		'public/Feed/ajaxWeiboInfo' => true,
 		'public/Feed/ajaxImageInfo' => true,
+
+		'public/Feed/video_exist' => true, /* # 视频状态 */
 	)
 		 
 );

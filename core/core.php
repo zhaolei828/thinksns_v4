@@ -24,6 +24,16 @@ tsdefine('IS_CGI',substr(PHP_SAPI, 0, 3)=='cgi' ? 1 : 0 );
 tsdefine('IS_WIN',strstr(PHP_OS, 'WIN') ? 1 : 0 );
 tsdefine('IS_HTTPS',0);
 
+// # 设置API版本常量
+if (isset($_REQUEST['api_version'])) {
+	$apiVersion = $_REQUEST['api_version'];
+	$apiVersion = preg_replace('/[^a-zA-Z0-9_\.\-]/is', '', $apiVersion);
+	tsdefine('API_VERSION', $apiVersion);
+	unset($apiVersion);
+} else {
+	tsdefine('API_VERSION', 'thinksns');
+}
+
 // 当前文件名
 if(!defined('_PHP_FILE_')) {
 	if(IS_CGI) {

@@ -8,19 +8,18 @@ set_time_limit(0);
 define('DEBUG',	true);
 // */
 
-// # 判断PHP版本是否满足
-if(version_compare(PHP_VERSION, '5.3.0', '<'))  exit('require PHP > 5.3.0 !');
+/* # 检查PHP版本是否符合运行要求 */
+if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+	echo '您的PHP版本为：' . PHP_VERSION,
+		 '<br>',
+		 'ThinkSNS程序运行版本不得低于：PHP 5.3.0';
+	exit;
 
-//安装检查开始：如果您已安装过ThinkSNS，可以删除本段代码
-if(is_dir('install/') && !file_exists('install/install.lock')){
-	header('location:' . 'install/install.php');
+/* # 检查是否安装过ThinkSNS */
+} elseif (is_dir(__DIR__ . '/install') and !file_exists(__DIR__ . '/install/install.lock')) {
+	header('location:install/install.php');
+	exit;
 }
-//安装检查结束
-
-// //禁止前台访问后台，使用后台入口index.php
-// if($_REQUEST['app']=='admin'){
-// 	exit;
-// }
 
 //网站根路径设置
 define('SITE_PATH', dirname(__FILE__));
@@ -29,14 +28,16 @@ define('SITE_PATH', dirname(__FILE__));
 require(SITE_PATH.'/core/core.php');
 
 //实例化一个网站应用实例
-$App = new App();
-$App->run();
-
-
-$mem_run_end = memory_get_usage();
-$time_run_end = microtime(TRUE);
+$app = new App;
+$app->run();
+unset($app);
+// (new App)->run();
 
 if(C('APP_DEBUG')){
+
+	$mem_run_end = memory_get_usage();
+	$time_run_end = microtime(true);
+
 	//数据库查询信息
 	echo '<div align="left">';
 	//缓存使用情况
@@ -81,4 +82,8 @@ if(C('APP_DEBUG')){
     dump($files);
     echo '<hr />';
 }
+	
+// # 注销变量
+// unset($App);
+
 // # The end

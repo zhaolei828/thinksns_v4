@@ -164,7 +164,7 @@ class App
      * @return void
      */
     static public function execApi() {
-        include_once (SITE_PATH.'/api/thinksns/'.MODULE_NAME.'Api.class.php');
+        include_once (SITE_PATH.'/api/' . API_VERSION . '/'.MODULE_NAME.'Api.class.php');
         $className = MODULE_NAME.'Api';
         $module = new $className();
         $action = ACTION_NAME;

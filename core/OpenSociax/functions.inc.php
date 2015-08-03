@@ -1825,7 +1825,7 @@ function getVisitorClient(){
 }
 
 //获取一条分享的来源信息
-function getFromClient($type=0, $app='public', $app_name){
+function getFromClient($type=0, $app='public', $app_name = ''){
 	if ( $app != 'public' ){
 		$appUpper = strtoupper($app);
 		$appName = L('PUBLIC_APPNAME_'.$appUpper);

@@ -26,6 +26,13 @@ class PublicAction extends Action {
 		$this->_user_model = model('User');
 		$this->_register_model = model('Register');
 		$this->setTitle(L('PUBLIC_REGISTER'));
+
+		$logo = '';
+        if (($logo = model('Xdata')->get('admin_Mobile:w3gLogo'))) {
+        	$logo = getAttachUrlByAttachId($logo['logo']);
+        }
+        $this->assign('logo', $logo);
+
 	}
 
 	//刷新操作
@@ -74,15 +81,6 @@ class PublicAction extends Action {
 		if ($passport->isLogged()) {
 			$this->redirect(U('w3g/Public/home'));
 		}
-		//载入站点配置全局变量
-		if($GLOBALS['ts']['site']['site_logo_w3g']==''){
-			$w3gLogoUrl='img/logo.png';
-		}else{
-			$attach = model('Attach')->getAttachById($GLOBALS['ts']['site']['site_logo_w3g']);        
-			$w3gLogoUrl = getImageUrl($attach['save_path'].$attach['save_name']); 
-		}
-		$this->assign('w3gLogoUrl',$w3gLogoUrl);
-		// dump($w3gLogoUrl);exit();
 
 
 		$this->assign('is_register_open', $this->isRegisterOpen() ? '1' : '0');

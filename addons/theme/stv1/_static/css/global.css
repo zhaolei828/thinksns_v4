@@ -20,6 +20,16 @@ body{_background-image:url(about:blank);
 p {
 	word-break: break-all;
 }
+.cc, #body-bg, #body-bg > div {
+    zoom: 1;
+}
+.cc:after, #body-bg:after, #body-bg > div:after {
+    content: '\20';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
 
 /*背景半透明*/
 .o_000_3{
@@ -156,12 +166,12 @@ filter:progid:DXImageTransform.Microsoft.gradient(enabled='true', startColorstr=
 .main-right .detail{margin:0 20px 8px}
 .page-content .set-section{padding:20px 0;border:#ebebeb solid 1px;border-top:none 0}
 .page-content .set-section .tab-menu{margin:0 20px}
-.st-grid{overflow:hidden;zoom:1}
+.st-grid{/*overflow:hidden;*/zoom:1}
 /*.st-grid:after, .st-section:after{visibility: hidden;display: block;font-size: 0;content: ".";clear: both;height: 0}*/
 .st-index-right{float:right;/*background:url(../image/right-bg.png) repeat;*/_height:1000px;_overflow:visible;}
 .st-index-main{float:left;*zoom:1;_height:1000px;_overflow:visible;}
 .st-index-left{float:left;width:118px;padding:0 0 40px;display:none;}
-.st-section{overflow:hidden;*zoom:1;_margin:0}
+.st-section{/*overflow:hidden;*/*zoom:1;_margin:0}
 .st-search-grid{border-bottom:#ebebeb solid 1px;padding:0}
 
 /*导航-----------------------------------------------*/

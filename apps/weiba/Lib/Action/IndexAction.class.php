@@ -157,9 +157,9 @@ class IndexAction extends Action {
 			$list['data'][$k]['image'] = $list['data'][$k]['user']['avatar_middle'];
 			
 			//首页帖子图片换成缩略图
-			$index_img_url = getImageUrlByAttachId($list['data'][$k]['index_img']);
-			$index_img_info = getThumbImage($index_img_url,700,310,true,false);
-			$list['data'][$k]['index_img'] = $index_img_info['src'];
+			// $index_img_url = getImageUrlByAttachId($list['data'][$k]['index_img'], 700, 310);
+			// $index_img_info = getThumbImage($index_img_url,700,310,true,false);
+			$list['data'][$k]['index_img'] = getImageUrlByAttachId($list['data'][$k]['index_img'], 700, 260);
 		}
 		return $list;
 	}
@@ -175,7 +175,7 @@ class IndexAction extends Action {
 		foreach ($list['data'] as $k=>$v){
 			//获取微吧
 			$map['cid'] = $v['id'];
-			$list['data'][$k]['list'] = D('weiba')->where($map)->order('new_day desc, new_count desc ,recommend desc,follower_count desc,thread_count desc')->limit(6)->select();
+			$list['data'][$k]['list'] = D('weiba')->where($map)->order('new_day desc, new_count desc ,recommend desc,follower_count desc,thread_count desc')->select();
 			if($list['data'][$k]['list']){
 				$weiba_ids = getSubByKey($list['data'][$k]['list'],'weiba_id');
 				$followStatus = D('weiba')->getFollowStateByWeibaids($this->mid,$weiba_ids);

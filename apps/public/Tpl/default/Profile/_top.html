@@ -37,15 +37,22 @@
 </div>
 <!--top-tab-->
 <div class="top-tab">
-  <ul class="clearfix my-tab">
+  <ul class="clearfix my-tab" id="medz-tab-box">
   <php>$top_tab = isset($_GET['tab']) ? $_GET['tab']: 'index'; $tagClass[$top_tab] = 'current';</php>
     <li style="width:16.66%"><a class="{$tagClass[index]}" href="{:U('public/Profile/index',array('uid'=>$mid))}">分享</a></li>
+    <?php if($channelIfOpen) { ?>
     <li style="width:16.66%"><a class="{$tagClass[channel]}" href="{:U('public/Profile/appList',array('tab'=>'channel','type'=>'channel','uid'=>$mid))}">频道</a></li>
+    <?php } ?>
+    <?php if($weibaIfOpen) { ?>
     <li style="width:16.66%"><a class="{$tagClass[weiba]}" href="{:U('public/Profile/appList',array('tab'=>'weiba','type'=>'weiba','uid'=>$mid))}">微吧</a></li>
-    <!--<li><a class="{$tagClass[photo]}" href="{:U('public/Profile/photo',array('tab'=>'photo'))}">我的晒物</a></li>-->
-<!--    <li><a class="{$tagClass[collect]}" href="{:U('public/Collection/index',array('tab'=>'collect'))}">我的收藏</a></li>
--->    <li style="width:16.66%"><a class="{$tagClass[collect]}" href="{:U('public/Profile/collection',array('tab'=>'collect'))}">收藏</a></li>
+    <?php } ?>
+    <li style="width:16.66%"><a class="{$tagClass[collect]}" href="{:U('public/Profile/collection',array('tab'=>'collect'))}">收藏</a></li>
     <li style="width:16.66%"><a class="{$tagClass[following]}" href="{:U('public/Profile/following', array('tab'=>'following','uid'=>$uid))}">关注</a></li>
     <li style="width:16.66%;"><a class="{$tagClass[follow]}" href="{:U('public/Profile/follower', array('tab'=>'follow','uid'=>$uid))}" style="border-right:none;">粉丝</a></li>
   </ul>
 </div>
+<script type="text/javascript">
+$(function() {
+  $('#medz-tab-box').find('li').css('width', $('#medz-tab-box').width() / $('#medz-tab-box').find('li').size());
+});
+</script>

@@ -47,7 +47,7 @@
 /*消息回复区*/
 .replay-section{padding:5px 0 20px 0;border-bottom:#eee solid 1px;margin:0 0 5px; background:#fff}
 .replay-section .hd {*zoom:1; background:#fff !important; cursor:default !important; font-weight:normal !important;}
-.replay-section .hd span{float:right}
+/*.replay-section .hd span{float:right}*/
 .replay-section .hd strong{padding:0 5px;color:#0096e6;}
 .replay-section .hd a{padding:0 0 0 5px}
 

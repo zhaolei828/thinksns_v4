@@ -197,9 +197,9 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
 			$filename = SITE_PATH . '/' . $info['filename'];
 			if (!file_exists($filename)) {
 				is_dir(dirname($filename)) or mkdir(dirname($filename), 0777, true);
-				is_dir(dirname($filename)) or $this->showError('目录' . dirname($filename) . '创建失败，请赋予0777权限');
+				is_dir(dirname($filename)) or $this->showError('目录' . dirname($filename) . '创建失败，请赋予0755权限');
 				file_put_contents($filename, $info['data']);
-				file_exists($filename) or $this->showError($filename . '文件写入失败，请赋予' . dirname($filename) . '目录0777权限');
+				file_exists($filename) or $this->showError($filename . '文件写入失败，请赋予' . dirname($filename) . '目录0755权限');
 			} elseif (!is_writable($filename)) {
 				$this->showError($filename . '文件写入失败，请确认该文件为可写状态');
 			}
@@ -259,14 +259,12 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
 			$delFile = include $delFile;
 			foreach ($delFile as $filename) {
 				$this->rm($filename, true);
-				unlink($filename);
 			}
 		}
 
 		// # 执行sql
 		if (file_exists($sqlFilePath)) {
-			$db = D('');
-			$result = $db->executeSqlFile($sqlFilePath);
+			$result = D('')->executeSqlFile($sqlFilePath);
 			if (isset($result['error_code'])) {
 				// # 回滚配置文件
 				$oldConf = file_get_contents(DATA_PATH . '/old.thinksns.conf.php');
