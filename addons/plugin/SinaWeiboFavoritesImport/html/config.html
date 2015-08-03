@@ -14,5 +14,7 @@ and open the template in the editor.
         {:Addons::adminPage('importFavoritesWeibo')}
         <a href="<?=$code_url?>" class="btn_a"><span>点击进入授权页面</span></a>
         <a href="{WB_CALLBACK_URL}" class="btn_a"><span>添加置顶</span></a>
+        <br/>
+        {:Addons::createAddonShow('SinaWeiboFavoritesImport','importFavoritesWeibo')}
     </body>
 </html>
