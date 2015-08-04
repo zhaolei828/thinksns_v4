@@ -36,7 +36,12 @@ class CurlDowload extends UploadFile{
                 return false;
             }
         }
-        $file['extension'] = $this->getExt($filename);
+        $file['extension'] = $this->getExt($fileUrl);
+        $file['save_path']   = $savePath;
+        $file['save_name']   = uniqid().'.'.$file['extension'];
+        $filename = $file['save_path'].$file['save_name'];
+        Http::curl_download($fileUrl, $filename);
+        return $file;
     }
     private function getExt($filename)
     {

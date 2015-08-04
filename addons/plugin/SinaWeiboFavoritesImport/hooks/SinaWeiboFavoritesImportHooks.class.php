@@ -71,4 +71,35 @@ class SinaWeiboFavoritesImportHooks extends Hooks {
         $this->assign('ms',$ms);
         $this->display('myfavorites');
     }
+    public function test(){
+        require_once SITE_PATH.'/addons/library/CurlDowload.class.php';
+        include_once $this->path . "/lib/helper.php";
+        $params['file_url'] = 'http://demo.thinksns.com/ts4/data/upload/2015/0803/18/55bf45248f2bd.jpg';
+        $helper = new helper();
+        $options = $helper->downOptions();
+        echo '==================================================';
+        echo '<pre>';print_r($options);echo '</pre>';
+        $c = new CurlDowload($options['max_size'], $options['allow_exts'], $options['allow_types']);
+        $c->savePath = $options['save_path'];
+        $c->autoSub = false;
+        $c->saveName = $options['save_name'];
+        $c->saveRule = $options['save_rule'];
+        mkdir($c->save_path, 0777, true);
+        $file = $c->curlDownImage($params['file_url']);
+        $file['custom_path']   = $options['custom_path'];
+        echo '==================================================';
+        echo '<pre>';print_r($file);echo '</pre>';
+        if ($options['auto_thumb'] == 1) {
+            $width = 120;
+            $height = 120;
+            $cut = true;
+            $info = getThumbImage ( $file['custom_path']. $file['save_name'], $width, $height, $cut );
+            echo '==================================================';
+            echo '<pre>';print_r($info);echo '</pre>';
+            echo UPLOAD_URL . $info['src'];
+            $file['thumb']=$info;
+            echo '==================================================';
+            echo '<pre>';print_r($file);echo '</pre>';
+        } 
+    }
 }
