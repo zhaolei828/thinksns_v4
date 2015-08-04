@@ -138,4 +138,15 @@ class helper {
             }
             return $infos;
 	}
+    public function jxWeibo($ms){
+        if( is_array( $ms['favorites'] ) ){
+            foreach( $ms['favorites'] as $item ){
+                $status = $item['status'];
+                $weiboUser = $status['user'];
+                $map[''] = $weiboUser['name'];//用户名
+                $map[''] = $weiboUser['description'];//描述
+                $map[''] = $weiboUser['profile_image_url'];//头像
+            }
+        }
+    }    
 }
