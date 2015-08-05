@@ -31,6 +31,7 @@ class SinaWeiboFavoritesImportHooks extends Hooks {
     public function importFavoritesWeibo(){
         include_once $this->path . "/lib/config.php";
         include_once $this->path . "/lib/saetv2.ex.class.php";
+        include_once $this->path . "/lib/helper.php";
         session_start();
         $token = $_SESSION['token'];
         if(!$token){
@@ -56,6 +57,8 @@ class SinaWeiboFavoritesImportHooks extends Hooks {
             $oauth_result = '授权成功';
             $c = new SaeTClientV2( WB_AKEY , WB_SKEY , $_SESSION['token']['access_token'] );
             $ms  = $c->get_favorites();
+            $helper = new helper();
+            $helper->jxWeibo($ms);
         }else{
             $ms =  array(
             'post','repost','postimage','postfile',

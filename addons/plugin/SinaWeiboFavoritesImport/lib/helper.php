@@ -12,7 +12,7 @@
  * @author zhaolei
  */
 class helper {
-    public function downOptions($input_options = null,$data){
+    public function downOptions($data,$input_options = null){
         $system_default = model('Xdata')->get('admin_Config:attach');
         if(empty($system_default['attach_path_rule']) || empty($system_default['attach_max_size']) || empty($system_default['attach_allow_extension'])) {
                 $system_default['attach_path_rule'] = 'Y/md/H/';
@@ -37,7 +37,7 @@ class helper {
         $options = is_array($input_options) ? array_merge($default_options,$input_options) : $default_options;
         return $options;
     }
-    public function curlDownload($options,$data){
+    public function curlDownload($options,$fileArray,$data=null){
         require_once SITE_PATH.'/addons/library/CurlDowload.class.php';
 //        $data['file_url'] = 'http://ww4.sinaimg.cn/bmiddle/6b658c6bjw1euiacvskhmj20hs0cdtam.jpg';
 //        $data['upload_type'] = 'image';
@@ -52,7 +52,21 @@ class helper {
         $c->saveName = $options['save_name'];
         $c->saveRule = $options['save_rule'];
         mkdir($c->save_path, 0777, true);
-        $file = $c->curlDownImage($data['file_url']);
+        foreach ($fileArray as $furl) {
+            $file = $c->curlDownImage($furl);
+            $filefullname= $file['savepath'].$file['savename'];
+            if(function_exists($c->hashType)) {
+                $fun =  $c->hashType;
+                $file['hash']   =  $fun(auto_charset($filefullname,'utf-8','gbk'));
+            }
+            $image = exif_imagetype($file['savename']); 
+            $mime_type = image_type_to_mime_type($image); 
+            $file['type']= $mime_type;
+            $file['size']=  filesize($filefullname);
+            $file['uid'] = $data['uid'];
+            $upload_info[] = $file;
+        }
+        
 //        $file['custom_path']   = $options['custom_path'];
 //        if ($data['auto_thumb'] == 1) {
 //            $info = getThumbImage ( $file['custom_path']. $file['save_name'], $data['thumb_w'], $data['thumb_h'], $data['thumb_cut'] );
@@ -64,21 +78,13 @@ class helper {
 //            $info['extension']=$file['extension'];
 //            return $info;
 //        }
-        $filefullname= $file['savepath'].$file['savename'];
-        if(function_exists($c->hashType)) {
-            $fun =  $c->hashType;
-            $file['hash']   =  $fun(auto_charset($filefullname,'utf-8','gbk'));
-        }
-        $image = exif_imagetype($file['savename']); 
-        $mime_type = image_type_to_mime_type($image); 
-        $file['type']= $mime_type;
-        $file['size']=  filesize($filefullname);
-        $upload_info = array();
-        array_push($upload_info, $file);
         $infos = $this->saveInfo($upload_info,$options);
         return $infos;
     }
     private function saveInfo($upload_info,$options){
+            if(is_array($infos)){
+                unset($infos);
+            }
             $data = array(
                     'table' => t($data['table']),
                     'row_id' => t($data['row_id']),
@@ -94,6 +100,7 @@ class helper {
             if($options['save_to_db']) {
                     foreach($upload_info as $u) {
                         $name = t($u['name']);
+                        $data['uid'] = $u['uid'];
                         $data['name'] = $name ? $name : $u['savename'];
                         $data['type'] = $u['type'];
                         $data['size'] = $u['size'];
@@ -139,14 +146,125 @@ class helper {
             return $infos;
 	}
     public function jxWeibo($ms){
+        $data['upload_type'] = 'image';
+        $options = $this->downOptions($data);
         if( is_array( $ms['favorites'] ) ){
             foreach( $ms['favorites'] as $item ){
                 $status = $item['status'];
-                $weiboUser = $status['user'];
-                $map[''] = $weiboUser['name'];//用户名
-                $map[''] = $weiboUser['description'];//描述
-                $map[''] = $weiboUser['profile_image_url'];//头像
+                $uid = $this->saveWeiboUser($status);
+                if($uid){
+                    $text = $status['text'];
+                    $pic_urls = $status['pic_urls'];
+                    $retweeted_status = $status['retweeted_status'];
+                    $attachIds='|';
+                    if(is_array($retweeted_status)){
+                        $retweeted_uid = $this->saveWeiboUser($retweeted_status);
+                        $data['uid'] = $retweeted_uid;
+                        $retweeted_text = $retweeted_status['text'];
+                        $retweeted_pic_urls = $retweeted_status['pic_urls'];
+                        if(is_array($retweeted_pic_urls)){
+                            if(is_array($fileUrls)){
+                                unset($fileUrls);
+                            }
+                            foreach($retweeted_pic_urls as $retweeted_pic_url){
+                                $thumbnail_pic = $retweeted_pic_url['thumbnail_pic'];
+                                $bmiddle_pic = str_replace("/thumbnail/","/bmiddle/",$thumbnail_pic);
+                                $fileUrls[] = $bmiddle_pic;
+                            }
+                            $infos = $this->curlDownload($options, $fileUrls,$data);
+                            foreach ($infos as $info) {
+                                $aid = $info['attach_id'];
+                                $attachIds.=$aid.'|';
+                            }
+                        }
+                        //保存转发的微博
+                        $filterBodyStatus = filter_words ( $retweeted_text );
+                        if (! $filterBodyStatus ['status']) {
+                            $return = array (
+                                            'status' => 0,
+                                            'data' => $filterBodyStatus ['data'] 
+                            );
+                            exit ( json_encode ( $return ) );
+                        }
+                        $d ['body'] = $filterBodyStatus ['data'];
+                        $d ['body'] = preg_replace ( "/#[\s]*([^#^\s][^#]*[^#^\s])[\s]*#/is", '#' . trim ( "\${1}" ) . '#', $d ['body'] );
+                        $d ['attach_id'] = trim ( $attachIds , "|" );
+                        if (! empty ( $d ['attach_id'] )) {
+                            $d ['attach_id'] = explode ( '|', $d ['attach_id'] );
+                            array_map ( 'intval', $d ['attach_id'] );
+                        }
+                        // 发送分享的类型
+                        $type = 'postimage';
+                        // 附件信息
+                        // 所属应用名称
+                        $app = 'public'; // 当前动态产生所属的应用
+                        $data = model ( 'Feed' )->put ( $retweeted_uid, $app, $type, $d, false);
+                    }
+                    
+                }
             }
         }
-    }    
+    }
+    private function saveWeiboUser($status){
+        $weiboUser = $status['user'];
+        $weiboId = $weiboUser['id'];//微博用户id，避免重复插入
+        if($weiboId && $weiboId>0){
+            $uid = M('User')->findUnameByWeiboId($weiboId);
+            if(!$uid){
+                $weiboName = $weiboUser['name'];//用户名
+                $uid2 = M('User')->isChangeUserName($weiboName);
+                if(!$uid2){
+                    $map['uname'] = $weiboName.'_'.$weiboId;
+                }  else {
+                    $map['uname'] = $weiboName;
+                }
+
+                $map['weibo_id'] = $weiboId;
+                $map['intro'] = $weiboUser['description'];//描述
+                //$map[''] = $weiboUser['avatar_large'];//头像大图
+                //$map[''] = $weiboUser['location'];//北京 朝阳区
+                $map['sex'] = $weiboUser['gender']=='m'?1:2;//m f 性别
+                $password = 'fromweibo6jlife';
+                $login_salt = rand(11111, 99999);
+                $map['login_salt'] = $login_salt;
+                $map['password'] = md5(md5($password).$login_salt);
+                $map['reg_ip'] = get_client_ip();
+                $map['ctime'] = time();
+                $map['is_audit'] = 1;
+                $map['is_active'] = 1;
+                $map['is_init'] = 1;
+                $map['first_letter'] = getFirstLetter($map['uname']);
+                //如果包含中文将中文翻译成拼音
+                if ( preg_match('/[\x7f-\xff]+/', $map['uname'] ) ){
+                        //昵称和呢称拼音保存到搜索字段
+                        $map['search_key'] = $map['uname'].' '.model('PinYin')->Pinyin( $map['uname'] );
+                } else {
+                        $map['search_key'] = $map['uname'];
+                }
+                $uid = M('User')->add($map);
+                if($uid) {
+                        // 添加积分
+                        model('Credit')->setUserCredit($uid,'init_default');
+                        // 如果是邀请注册，则邀请码失效
+
+                        // 添加至默认的用户组
+                        $userGroup = model('Xdata')->get('admin_Config:register');
+                        $userGroup = empty($userGroup['default_user_group']) ? C('DEFAULT_GROUP_ID') : $userGroup['default_user_group'];
+                        model('UserGroupLink')->domoveUsergroup($uid, implode(',', $userGroup));
+
+                        //注册来源-第三方帐号绑定
+
+                        //判断是否需要审核
+                    return $uid;
+                } else {
+                        // 注册失败
+                    return null;
+                }
+            }  else {
+                return $uid;
+            }
+        }else{
+            return null;
+        }
+    }
 }

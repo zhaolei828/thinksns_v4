@@ -973,4 +973,7 @@ class TestAction extends Action{
 //            print_r($params);
             
         }
+         public function testhead(){
+             header( 'Content-Type:text/css;charset=utf-8' );
+         }
 }

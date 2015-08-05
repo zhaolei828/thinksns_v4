@@ -86,7 +86,7 @@ class FeedAction extends Action {
          * app_name:"public"
          * channel:""
          * content:""
-         * attach_id:"|104|"
+         * attach_id:"|109|110|111|"
          * video_id:""
          * videourl:""
          * channel_id:""
@@ -238,6 +238,12 @@ class FeedAction extends Action {
 	 * 分享/转发分享操作，需要传入POST的值
 	 *
 	 * @return json 分享/转发分享后的结果信息JSON数据
+         * body:
+         * type:feed
+         * app_name:public
+         * sid:10
+         * curid:10转发的feed id
+         * curtable:feed
 	 */
 	public function shareFeed() {
 		// 获取传入的值

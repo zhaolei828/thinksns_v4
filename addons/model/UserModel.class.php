@@ -42,6 +42,7 @@ class UserModel extends Model {
 			31 => 'openid',
 			32 => 'input_city',
 			33 => 'is_fixed',
+                        34 => 'weibo_id',
 			'_autoinc' => true,
 			'_pk' => 'uid' 
 	);
@@ -1366,6 +1367,12 @@ class UserModel extends Model {
 			return true;
 		}
 		return false;
+	}
+        
+        public function findUnameByWeiboId($weiboId)
+	{
+            $uid = $this->where('`weibo_id` = ' . $weiboId )->field('`uid`')->getField('uid');
+            return $uid;
 	}
 
 } // END class UserModel

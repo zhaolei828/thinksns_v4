@@ -1,5 +1,4 @@
 <?php
-
 class IndexAction extends CatBaseAction
 {
     public function  _initialize()
@@ -464,9 +463,8 @@ class IndexAction extends CatBaseAction
      */
     public function css()
     {
-        header('Content-type: text/css');
+        header( 'Content-Type:text/css;charset=utf-8' );
         echo catC('CSS');
-
     }
 
     /**
