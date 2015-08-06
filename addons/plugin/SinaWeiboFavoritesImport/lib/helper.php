@@ -82,9 +82,6 @@ class helper {
         return $infos;
     }
     private function saveInfo($upload_info,$options){
-            if(is_array($infos)){
-                unset($infos);
-            }
             $data = array(
                     'table' => t($data['table']),
                     'row_id' => t($data['row_id']),
@@ -157,15 +154,12 @@ class helper {
                     $pic_urls = $status['pic_urls'];
                     $retweeted_status = $status['retweeted_status'];
                     $attachIds='|';
-                    if(is_array($retweeted_status)){
+                    if(is_array($retweeted_status)){//转发内容
                         $retweeted_uid = $this->saveWeiboUser($retweeted_status);
                         $data['uid'] = $retweeted_uid;
                         $retweeted_text = $retweeted_status['text'];
                         $retweeted_pic_urls = $retweeted_status['pic_urls'];
                         if(is_array($retweeted_pic_urls)){
-                            if(is_array($fileUrls)){
-                                unset($fileUrls);
-                            }
                             foreach($retweeted_pic_urls as $retweeted_pic_url){
                                 $thumbnail_pic = $retweeted_pic_url['thumbnail_pic'];
                                 $bmiddle_pic = str_replace("/thumbnail/","/bmiddle/",$thumbnail_pic);
@@ -176,6 +170,8 @@ class helper {
                                 $aid = $info['attach_id'];
                                 $attachIds.=$aid.'|';
                             }
+                            unset($fileUrls);
+                            unset($retweeted_pic_urls);
                         }
                         //保存转发的微博
                         $filterBodyStatus = filter_words ( $retweeted_text );
@@ -198,7 +194,102 @@ class helper {
                         // 附件信息
                         // 所属应用名称
                         $app = 'public'; // 当前动态产生所属的应用
-                        $data = model ( 'Feed' )->put ( $retweeted_uid, $app, $type, $d, false);
+                        if (! $feedResult = model ( 'Feed' )->put ( $retweeted_uid, $app, $type, $d,0, 'feed',null,null,true,0,false)) {
+                                $return = array (
+                                                'status' => 0,
+                                                'data' => model ( 'Feed' )->getError () 
+                                );
+                                exit ( json_encode ( $return ) );
+                        }
+                        $feed_id = $feedResult['feed_id'];
+                        
+                        //分享
+                        $filterBodyStatusShare = filter_words ( $text );
+                        if (! $filterBodyStatusShare ['status']) {
+                                $return = array (
+                                                'status' => 0,
+                                                'data' => $filterBodyStatusShare ['data'] 
+                                );
+                                exit ( json_encode ( $return ) );
+                        }
+                        $post ['body'] = $filterBodyStatusShare ['data'];
+                        $post ['curid'] = $feed_id;
+                        $post ['sid'] = $feed_id;
+                        
+                        // 判断资源是否删除
+                        if (empty ( $post ['curid'] )) {
+                                $map ['feed_id'] = intval ( $post ['sid'] );
+                        } else {
+                                $map ['feed_id'] = intval ( $post ['curid'] );
+                        }
+                        $map ['is_del'] = 0;
+                        $isExist = model ( 'Feed' )->where ( $map )->count ();
+                        if ($isExist == 0) {
+                                $return ['status'] = 0;
+                                $return ['data'] = '内容已被删除，转发失败';
+                                exit ( json_encode ( $return ) );
+                        }
+                        $post['type'] = 'feed';
+                        $post['app_name'] = 'public';
+                        $post['curtable'] = 'feed';
+                        $shareResult = model ( 'Share' )->shareFeed ( $post, 'share',null,$uid,false );
+                        
+                        if ($shareResult ['status'] == 1) {
+                            $app_name = $post ['app_name'];
+			
+                            // 添加积分
+                            if ($app_name == 'public') {
+                                    model ( 'Credit' )->setUserCredit ( $uid, 'forward_weibo' );
+                                    // 分享被转发
+                                    $suid = model ( 'Feed' )->where ( $map )->getField ( 'uid' );
+                                    model ( 'Credit' )->setUserCredit ( $suid, 'forwarded_weibo' );
+                            }
+                        }
+                        unset($retweeted_status);
+                    }else{
+                        $data['uid'] = $uid;
+                        if(is_array($pic_urls)){
+                            foreach($pic_urls as $pic_url){
+                                $thumbnail_pic = $pic_url['thumbnail_pic'];
+                                $bmiddle_pic = str_replace("/thumbnail/","/bmiddle/",$thumbnail_pic);
+                                $fileUrls[] = $bmiddle_pic;
+                            }
+                            $infos = $this->curlDownload($options, $fileUrls,$data);
+                            foreach ($infos as $info) {
+                                $aid = $info['attach_id'];
+                                $attachIds.=$aid.'|';
+                            }
+                            unset($fileUrls);
+                            unset($pic_urls);
+                        }
+                        //保存微博
+                        $filterBodyStatus = filter_words ( $text );
+                        if (! $filterBodyStatus ['status']) {
+                            $return = array (
+                                            'status' => 0,
+                                            'data' => $filterBodyStatus ['data'] 
+                            );
+                            exit ( json_encode ( $return ) );
+                        }
+                        $d ['body'] = $filterBodyStatus ['data'];
+                        $d ['body'] = preg_replace ( "/#[\s]*([^#^\s][^#]*[^#^\s])[\s]*#/is", '#' . trim ( "\${1}" ) . '#', $d ['body'] );
+                        $d ['attach_id'] = trim ( $attachIds , "|" );
+                        if (! empty ( $d ['attach_id'] )) {
+                            $d ['attach_id'] = explode ( '|', $d ['attach_id'] );
+                            array_map ( 'intval', $d ['attach_id'] );
+                        }
+                        // 发送分享的类型
+                        $type = 'postimage';
+                        // 附件信息
+                        // 所属应用名称
+                        $app = 'public'; // 当前动态产生所属的应用
+                        if (! $data = model ( 'Feed' )->put ( $uid, $app, $type, $d,0, 'feed',null,null,true,0,false)) {
+                                $return = array (
+                                                'status' => 0,
+                                                'data' => model ( 'Feed' )->getError () 
+                                );
+                                exit ( json_encode ( $return ) );
+                        }
                     }
                     
                 }

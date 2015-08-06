@@ -24,7 +24,7 @@ class FeedModel extends Model {
 	 * @param boolean $isAtMe 是否为进行发送，默认为true
 	 * @return mix 添加失败返回false，成功返回新的分享ID
 	 */
-	public function put($uid, $app = 'public', $type = '', $data = array(),$auto=true, $app_id = 0, $app_table = 'feed', $extUid = null, $lessUids = null, $isAtMe = true, $is_repost = 0) {
+	public function put($uid, $app = 'public', $type = '', $data = array(), $app_id = 0, $app_table = 'feed', $extUid = null, $lessUids = null, $isAtMe = true, $is_repost = 0,$auto=true) {
 		if(isSubmitLocked() && $auto){
 			$this->error = '发布内容过于频繁，请稍后再试';
 			return false;

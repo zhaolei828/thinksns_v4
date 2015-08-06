@@ -24,7 +24,7 @@ class ShareModel {
 	 *        	去掉@用户，默认为null
 	 * @return array 分享操作后，相关反馈信息数据
 	 */
-	public function shareFeed($data, $from = 'share', $lessUids = null) {
+	public function shareFeed($data, $from = 'share', $lessUids = null,$uid=null,$auto=true) {
 		// 返回的数据结果集
 		$return = array (
 				'status' => 0,
@@ -74,7 +74,10 @@ class ShareModel {
 		$d ['latitude'] = isset ( $data ['latitude'] ) ? $data ['latitude'] : 0;
 		$d ['longitude'] = isset ( $data ['longitude'] ) ? $data ['longitude'] : 0;
 		$d ['address'] = isset ( $data ['address'] ) ? $data ['address'] : 0;
-		if ($res = model ( 'Feed' )->put ( $GLOBALS ['ts'] ['mid'], $app, $feedType, $d, $appId, $appTable, null, $lessUids, $isOther, 1 )) {
+                if(null == $uid){
+                    $uid = $GLOBALS ['ts'] ['mid'];
+                }
+		if ($res = model ( 'Feed' )->put ($uid , $app, $feedType, $d, $appId, $appTable, null, $lessUids, $isOther, 1,$auto )) {
 			// if($data['comment'] != 0 && $oldInfo['uid'] != $data['comment_touid']) {
 			if (($data ['comment'] != 0 || $data ['comment_old'] != 0)) { // && $oldInfo['uid'] != $data['comment_touid']
 			                                                             // 发表评论
@@ -97,7 +100,7 @@ class ShareModel {
 						$datas ['post_uid'] = $postDetail ['post_uid'];
 						// $datas['to_reply_id'] = $data['to_comment_id']?D('weiba_reply')->where('comment_id='.$data['to_comment_id'])->getField('reply_id'):0;
 						// $datas['to_uid'] = $data['to_uid'];
-						$datas ['uid'] = $GLOBALS ['ts'] ['mid'];
+						$datas ['uid'] = $uid;
 						$datas ['ctime'] = time ();
 						$datas ['content'] = $c ['content'];
 						$datas ['comment_id'] = $comment_id;
