@@ -150,11 +150,21 @@ class helper {
                 $status = $item['status'];
                 $uid = $this->saveWeiboUser($status);
                 if($uid){
+                    $wid = $status['id'];
+                    $dbFeedId = model('Feed')->findFeedIdByWeiboId($wid);
+                    if($dbFeedId){
+                        continue;
+                    }
                     $text = $status['text'];
                     $pic_urls = $status['pic_urls'];
                     $retweeted_status = $status['retweeted_status'];
                     $attachIds='|';
                     if(is_array($retweeted_status)){//转发内容
+                        $rwid = $retweeted_status['id'];
+                        $dbReFeedId = model('Feed')->findFeedIdByWeiboId($rwid);
+                        if($dbReFeedId){
+                            continue;
+                        }
                         $retweeted_uid = $this->saveWeiboUser($retweeted_status);
                         $data['uid'] = $retweeted_uid;
                         $retweeted_text = $retweeted_status['text'];
@@ -182,6 +192,7 @@ class helper {
                             );
                             exit ( json_encode ( $return ) );
                         }
+                        $d ['weibo_id'] = $rwid;
                         $d ['body'] = $filterBodyStatus ['data'];
                         $d ['body'] = preg_replace ( "/#[\s]*([^#^\s][^#]*[^#^\s])[\s]*#/is", '#' . trim ( "\${1}" ) . '#', $d ['body'] );
                         $d ['attach_id'] = trim ( $attachIds , "|" );
@@ -232,6 +243,7 @@ class helper {
                         $post['type'] = 'feed';
                         $post['app_name'] = 'public';
                         $post['curtable'] = 'feed';
+                        $post['weibo_id'] = $wid;
                         $shareResult = model ( 'Share' )->shareFeed ( $post, 'share',null,$uid,false );
                         
                         if ($shareResult ['status'] == 1) {
@@ -271,6 +283,7 @@ class helper {
                             );
                             exit ( json_encode ( $return ) );
                         }
+                        $d ['weibo_id'] = $wid;
                         $d ['body'] = $filterBodyStatus ['data'];
                         $d ['body'] = preg_replace ( "/#[\s]*([^#^\s][^#]*[^#^\s])[\s]*#/is", '#' . trim ( "\${1}" ) . '#', $d ['body'] );
                         $d ['attach_id'] = trim ( $attachIds , "|" );
@@ -312,7 +325,6 @@ class helper {
 
                 $map['weibo_id'] = $weiboId;
                 $map['intro'] = $weiboUser['description'];//描述
-                //$map[''] = $weiboUser['avatar_large'];//头像大图
                 //$map[''] = $weiboUser['location'];//北京 朝阳区
                 $map['sex'] = $weiboUser['gender']=='m'?1:2;//m f 性别
                 $password = 'fromweibo6jlife';
@@ -333,6 +345,17 @@ class helper {
                         $map['search_key'] = $map['uname'];
                 }
                 $uid = M('User')->add($map);
+                $avatarLargeUrl = $weiboUser['avatar_large'];//头像大图
+                $data['upload_type'] = 'image';
+                $options = $this->downOptions($data);
+                $options['custom_path']='avatar' . model('Avatar')->convertUidToPath($uid).'/';
+                $options['save_name']='original.jpg';
+                $options['save_path'] = UPLOAD_PATH . '/avatar' . model('Avatar')->convertUidToPath($uid).'/' ;
+                $fileArray[] = $avatarLargeUrl;
+//                echo '<pre>';print_r($options);echo '</pre>';
+                $infos = $this->curlDownload($options, $fileArray,$data);
+//                echo '<pre>';print_r($infos);echo '</pre>';
+                unset($fileArray);
                 if($uid) {
                         // 添加积分
                         model('Credit')->setUserCredit($uid,'init_default');

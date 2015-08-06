@@ -77,6 +77,9 @@ class ShareModel {
                 if(null == $uid){
                     $uid = $GLOBALS ['ts'] ['mid'];
                 }
+                if (isset ( $data ['weibo_id'] )){
+                    $d ['weibo_id'] = $data ['weibo_id'];
+                }
 		if ($res = model ( 'Feed' )->put ($uid , $app, $feedType, $d, $appId, $appTable, null, $lessUids, $isOther, 1,$auto )) {
 			// if($data['comment'] != 0 && $oldInfo['uid'] != $data['comment_touid']) {
 			if (($data ['comment'] != 0 || $data ['comment_old'] != 0)) { // && $oldInfo['uid'] != $data['comment_touid']

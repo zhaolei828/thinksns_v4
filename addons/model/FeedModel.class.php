@@ -7,7 +7,7 @@
 class FeedModel extends Model {
 
 	protected $tableName = 'feed';
-	protected $fields = array('feed_id','uid','type','app','app_row_id','app_row_table','publish_time','is_del','from','comment_count','repost_count','comment_all_count','digg_count','is_repost','is_audit','latitude','longitude','address','is_recommend','recommend_time','_pk'=>'feed_id');
+	protected $fields = array('feed_id','uid','type','app','app_row_id','app_row_table','publish_time','is_del','from','comment_count','repost_count','comment_all_count','digg_count','is_repost','is_audit','latitude','longitude','address','is_recommend','recommend_time','weibo_id','_pk'=>'feed_id');
 
 	public $templateFile = '';			// 模板文件
 
@@ -63,7 +63,6 @@ class FeedModel extends Model {
 		$data['from'] = isset($data['from']) ? intval($data['from']) : getVisitorClient();
 		$data['is_del'] = $data['comment_count'] = $data['repost_count'] = 0;
 		$data['is_repost'] = $is_repost;
-
 		//判断是否先审后发
 
 		$filterStatus = filter_words($data['body']);
@@ -122,7 +121,7 @@ class FeedModel extends Model {
         		
         }
 		// 添加分享信息
-		$feed_id =  $this->data($data)->add();
+                $feed_id =  $this->data($data)->add();
 		if(!$feed_id) return false;
 		if($data['video_id']){
 			D('video')->where('video_id='.$data['video_id'])->setField('feed_id',$feed_id);
@@ -141,6 +140,11 @@ class FeedModel extends Model {
 		$data['content'] = str_replace(chr(31), '', $data['content']);
 		$data['body'] = str_replace(chr(31), '', $data['body']);
 		// 添加关联数据
+//                $weibo_id = null;
+//                if(isset($data['weibo_id'])){
+//                   $weibo_id =  $data['weibo_id'];
+//                }
+//		$feed_data = D('FeedData')->data(array('feed_id'=>$feed_id,'feed_data'=>serialize($data),'client_ip'=>get_client_ip(),'client_port'=>get_client_port(),'feed_content'=>$data['body'],'weibo_id'=>$weibo_id))->add();
 		$feed_data = D('FeedData')->data(array('feed_id'=>$feed_id,'feed_data'=>serialize($data),'client_ip'=>get_client_ip(),'client_port'=>get_client_port(),'feed_content'=>$data['body']))->add();
 		// 添加分享成功后
 		if($feed_id && $feed_data) {
@@ -1672,5 +1676,10 @@ class FeedModel extends Model {
 			return $rec_ids;
 		}
 		return $this->formatFeed($rec_ids, true);
+	}
+        public function findFeedIdByWeiboId($weiboId)
+	{
+            $feedid = $this->where('`weibo_id` = ' . $weiboId )->field('`feed_id`')->getField('feed_id');
+            return $feedid;
 	}
 }
