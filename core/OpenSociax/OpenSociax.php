@@ -23,7 +23,7 @@ tsconfig(include CONF_PATH.'/html.inc.php');
 tsconfig(include CONF_PATH.'/router.inc.php');
 
 if(!isset($_REQUEST['app']) && !isset($_REQUEST['mod']) && !isset($_REQUEST['act'])){
-	$ts['_app'] = 'public';
+	$ts['_app'] = 'square';
 	$ts['_mod'] = 'Index';
 	$ts['_act'] = 'index';
 }else{

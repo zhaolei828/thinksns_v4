@@ -12,11 +12,11 @@ and open the template in the editor.
     </head>
     <body>
         <h1>{$oauth_result}</h1>
-    <if condition="($oauth_code eq 1)">
+<!--    <if condition="($oauth_code eq 1)">
         <pre>
             <?php print_r($ms); ?>
         </pre>
-    </if>
+    </if>-->
     <volist name="ms['favorites']" id="item" empty="暂时没有数据" >
         <div style="padding:10px;margin:5px;border:1px solid #ccc;">
             @{$item.status.user.name}：{$item.status.text}<br/>
