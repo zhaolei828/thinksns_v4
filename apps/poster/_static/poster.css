@@ -1,5 +1,12 @@
 @charset "utf-8";
 /* 招贴板样式 */
+#searchposter_input{margin: 0px;padding:7px 5px 6px;width:186px;}
+#search_poster .btn-search{height: 20px;padding: 7px 0px 6px 0px;text-align:center;color: white;font-weight: bold;}
+.app-tab-menu ul{margin-left: 50px;}
+.app-tab-menu li{margin-left: 0px;}
+.tab-menu{margin-bottom: 0px;}
+.mainbox_appC{padding-left: 20px;}
+
 a.username, .username{ font-weight: normal}
 .headpic50{height:55px;}
 .groupBox{overflow:hidden; margin-top: 10px}
@@ -23,14 +30,15 @@ overflow:hidden;}
 .info .list .lineS_top img{display:block;max-width:640px;_width:640px;}
 
 /*分类信息*/
-.sort{  border:1px solid #eee; background-color:#F5F5F5 }
+.sort{  border:1px solid #E4E6E9; background-color:#E4E6E9 }
 .sort dl{ width:99.9%;margin:0 0 0 5px;overflow:hidden;*width:98%;*zoom:1;}
 .sort dt{ clear: both; font-weight: bold; line-height: 25px; padding-left: 10px; _padding-left:5px}
 .sort dd{ float: left;line-height: 30px;white-space:nowrap;}
 .sort dd a.on{color:#000; font-weight:bold; display:block; float:left; background-color:#fff}
-.sort dd a{ padding:0 8px;}
+.sort dd a{ padding:0 8px;color: #36C;text-decoration: none;}
+.sort dd a:hover{ color: #36C;text-decoration: none;}
 /*全部活动式*/
-.poster_boxL .search{ margin:0; padding: 10px 0 0px;width:auto; *width:99%; overflow:hidden}
+.poster_boxL .search{ margin:0; padding: 10px 0px 0px 20px;width:auto; *width:99%; overflow:hidden}
 .search li{padding-bottom: 10px; clear:both; margin-bottom:10px;position:relative;overflow:hidden;*zoom:1;}
 .search li h3{font-family:"微软雅黑";font-size: 18px; font-weight: normal; margin-bottom:15px;}
 .search li p{margin:0 0 10px 0; padding: 0px}
