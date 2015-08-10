@@ -1631,7 +1631,7 @@ class FeedModel extends Model {
 		$count = intval($data['count']) ? intval($data['count']) : 10;
 		$page = intval($data['page']);
 		//获取后台置顶
-// 		$wl_top_ids = $this->getFeedTop(true);
+ 		$wl_top_ids = $this->getFeedTop(true);
 // 		if($_GET['page']<2){
 // 			//获取频道推荐
 // 			$wl_recommend_ids = $this->getChannelRecomment(true);
@@ -1648,12 +1648,12 @@ class FeedModel extends Model {
 		//添加关注的自己的分享
 		$feed_ids = array_merge($feed_ids, $wl_attention_ids);
 		//添加置顶分享
-// 		$feed_ids = array_merge($wl_top_ids, $feed_ids);
+ 		$feed_ids = array_merge($wl_top_ids, $feed_ids);
 		//去重
-		$feed_ids = array_unique($feed_ids);
+		//$feed_ids = array_unique($feed_ids);
 		
-		array_multisort($feed_ids, SORT_DESC);
-		return $this->formatFeed($feed_ids, true);
+		//array_multisort($feed_ids, SORT_DESC);
+		//return $this->formatFeed($feed_ids, true);
 	}
 
 	//获取后台推荐的分享
