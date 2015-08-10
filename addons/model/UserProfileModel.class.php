@@ -202,7 +202,7 @@ class UserProfileModel	extends	Model {
 				}
 
 				$field_ids[] = $field_id;
-				$d_v = str_replace("'", "\\'", $d_v);
+				/* # $d_v = str_replace("'", "\\'", $d_v); */
 				$save_data[] = "{$uid}, {$field_id}, '".(('date' == $setting[$d_k]['form_type']) && !is_numeric($d_v) ? strtotime($d_v) : $d_v) . "'";
 			}
 		}

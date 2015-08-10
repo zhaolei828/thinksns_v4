@@ -129,7 +129,8 @@ $menu = array(
 	 	/* # APP seting */
 	 	'application' => array(
 	 		'seting' => array(
-	 			'发现轮播' => U('admin/Application/index'),
+	 			'发现轮播'   => U('admin/Application/index'),
+	 			'Socket设置' => U('admin/Application/socket'),
 	 		),
 	 	),
     )

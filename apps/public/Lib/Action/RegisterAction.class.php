@@ -1044,11 +1044,30 @@ class RegisterAction extends Action
 		$this->ajaxReturn(null, $this->_register_model->getLastError(), $result);
 	}
 
+	/* # 注册的时候验证的验证码 */
 	public function isRegCodeAvailable() {
-		$regCode = t($_POST['regCode']);
+		$code = intval($_POST['regCode']);
+		$phone= floatval($_POST['phone']);
+		$sms  = model('Sms');
+
+		if ($sms->CheckCaptcha($phone, $code)) {
+			echo json_encode(array(
+				'status' => true,
+				'info'   => '验证通过'
+			));
+			exit;
+		}
+
+		echo json_encode(array(
+			'status' => false,
+			'info'   => $sms->getMessage()
+		));
+		exit;
+
+		/*$regCode = t($_POST['regCode']);
 		$phone = t($_POST['phone']);
 		$result = $this->_register_model->isValidRegCode($regCode, $phone);
-		$this->ajaxReturn(null, $this->_register_model->getLastError(), $result);
+		$this->ajaxReturn(null, $this->_register_model->getLastError(), $result);*/
 	}
 
 	/**
@@ -1094,18 +1113,70 @@ class RegisterAction extends Action
 	 * @return boolean 若正确返回true，否则返回false
 	 */
 	public function isValidVerify () {
-		$verify = t($_POST['verify']);
+		$code = intval($_POST['verify']);
+		$sms  = model('Sms');
+		$phone= $_SESSION['phone'];
+
+		/* # 检查验证码是否正确 */
+		if ($sms->CheckCaptcha($phone, $code)) {
+			echo json_encode(array(
+				'status' => 1,
+				'info'   => '验证通过！'
+			));
+			exit;
+		}
+
+		echo json_encode(array(
+			'status' => 0,
+			'info'   => $sms->getMessage()
+		));
+		unset($sms);
+		exit;
+		/*$verify = t($_POST['verify']);
 		$res['status'] = 0;
 		$res['info'] = '验证码输入错误';
 		if (md5(strtoupper($verify)) == $_SESSION['verify']) {
 			$res['status'] = 1;
 			$res['info'] = '验证通过';
 		}
-		exit(json_encode($res));
+		exit(json_encode($res));*/
 	}
 
 	public function sendReigterCode() {
-		$tel = t($_POST['phone']);
+		$phone = floatval($_POST['phone']);
+
+		/* # session记录手机号码 */
+		$_SESSION['phone'] = $phone;
+
+		/* # 验证是否是手机号码 */
+		if (0 >= preg_match('/^\+?[0\s]*[\d]{0,4}[\-\s]?\d{4,12}$/', $phone)) {
+			echo json_encode(array(
+				'status' => 0,
+				'data'   => '不是正确的手机号码！'
+			));
+
+		/* # 验证该手机号码是否已经注册 */
+		} elseif (!model('User')->isChangePhone($phone)) {
+			echo json_encode(array(
+				'status' => 0,
+				'data'   => '该手机已经被注册成用户，您无法发送验证码！'
+			));
+
+		/* # 检查是否发送成功 */
+		} elseif (($sms = model('Sms')) and !$sms->sendCaptcha($phone, true)) {
+			echo json_encode(array(
+				'status' => 0,
+				'data'   => $sms->getMessage()
+			));
+		} else {
+			echo json_encode(array(
+				'status' => 1,
+				'data'   => '发送成功，请注意查收！'
+			));
+		}
+		exit;
+
+		/*$tel = t($_POST['phone']);
 		$smsModel = model('Captcha');
 		if (strlen($tel) != 11) {
 			$data['status'] = 0;
@@ -1121,7 +1192,7 @@ class RegisterAction extends Action
 			$data['data'] = $smsModel->getError();
 		}
 
-		exit(json_encode($data));
+		exit(json_encode($data));*/
 	}
 	
 }

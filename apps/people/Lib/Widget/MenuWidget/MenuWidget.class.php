@@ -58,11 +58,12 @@ class MenuWidget extends Widget
 
         		break;
             case 'verify':
-                //$var['menu'] = model('CategoryTree')->setTable('user_verified_category')->getNetworkList();
+                // $var['menu'] = model('CategoryTree')->setTable('user_verified_category')->getNetworkList();
                 $var['menu'] = model('UserGroup')->where('is_authenticate=1')->findAll();
                 foreach($var['menu'] as $k=>$v){
                     $var['menu'][$k]['child'] = D('user_verified_category')->where('pid='.$v['user_group_id'])->findAll();
                 }
+                $var['pid'] = intval($data['pid']);
                 break;
             case 'official':
                 $var['menu'] = model('CategoryTree')->setTable('user_official_category')->getNetworkList();

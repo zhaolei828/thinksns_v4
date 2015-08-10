@@ -149,7 +149,7 @@ class UpgradeAction extends AdministratorAction
 1.点击上方链接，下载补丁。
 2.解压下载的补丁。
 3.将补丁覆盖到您的ThinkSNS目录下。
-4.覆盖完成，<a href="' . U('/admin/Upgrade/step3') . '">点击这里</a>完成最后的升级工作。</font>
+4.覆盖完成，<a href="' . U('admin/Upgrade/step3') . '">点击这里</a>完成最后的升级工作。</font>
 PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方最后升级步骤。否则数据库有缺失自行负责。
 <pre/>';
 		$this->onsubmit = 'confirm(\'确定要升级吗？\')';

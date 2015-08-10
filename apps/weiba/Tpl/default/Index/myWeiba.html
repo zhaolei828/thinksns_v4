@@ -143,11 +143,6 @@ $(function () {
     return false;
   });
 
-  $(".post-list li").click(function(){
-      var href = $(this).find("a").attr("href");
-      location.href = href;
-  });
-
 
   $(".post-list li").hover(function(){
     $(this).find(".item").css("background","#FFF");

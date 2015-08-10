@@ -31,7 +31,6 @@ require(SITE_PATH.'/core/core.php');
 $app = new App;
 $app->run();
 unset($app);
-// (new App)->run();
 
 if(C('APP_DEBUG')){
 

@@ -2290,15 +2290,16 @@ define('UC_SYNC', {$ucopen});
 		// 	'sms_password',
 		// );
 		
-		$this->pageKeyList = array('sms_server', 'sms_param', 'success_code', 'send_type', 'service');
+		$this->pageKeyList = array('sms_server', 'sms_param', 'success_code', 'template', 'send_type', 'service');
 
 		$this->opt['send_type'] = array(
+			'auto' => '自动判断',
 			'post' => 'POST方式',
 			'get'  => 'GET方式',
 		);
 
 		$this->opt['service'] = array(
-			'false' => '使用返回标识判断',
+			'auto'  => '自动判断',
 			'ihuyi' => '互亿无线'
 		);
 		

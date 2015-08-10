@@ -617,6 +617,16 @@ class IndexAction extends Action {
         if(count($match[0])>25){     //汉字和字母都为一个字
         	$this->error('帖子标题不能超过25个字，等待返回修改标题',$type);
         }
+
+
+        /* # 帖子内容 */
+        $content = h($_POST['content']);
+        if (get_str_length($content) >= 20000) {
+        	$this->error('帖子内容过长！无法发布！');
+        }
+        unset($content);
+
+
 		if ( $_POST['attach_ids'] ){
 			$attach = explode('|', $_POST['attach_ids']);
 			foreach ( $attach as $k=>$a){
@@ -994,6 +1004,7 @@ class IndexAction extends Action {
 			}
 		}
 		$post_id = $_POST['post_id'];
+		$post_id = intval($post_id);
 		if(D('weiba_post')->where('post_id='.$post_id)->setField('is_del',1)){
 			$post_detail = D('weiba_post')->where('post_id='.$post_id)->find();
 			if(intval($_POST['log'])==1){

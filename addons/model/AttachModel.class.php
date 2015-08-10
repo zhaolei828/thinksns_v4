@@ -24,6 +24,10 @@ class AttachModel extends Model {
 			return false;
 		}
 		!is_array($ids) && $ids = explode(',', $ids);
+
+		/* # sql注入，ID过滤 */
+		array_map('intval', $ids);
+
 		$map['attach_id'] =	array('IN', $ids);
 		$data = $this->where($map)->field($field)->order('attach_id asc')->findAll();
 

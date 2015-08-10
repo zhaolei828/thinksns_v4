@@ -16,6 +16,8 @@ class UserPrivacyModel extends Model {
 	 */
 	public function getUserSet($uid) {
 		$set = $this->_defaultSet();
+
+		$uid = intval($uid);
 		
 		$userPrivacy = $this->where('uid='.$uid)->field('`key`,`value`')->findAll();
 		if($userPrivacy) {

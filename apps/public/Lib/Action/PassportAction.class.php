@@ -124,11 +124,11 @@ class PassportAction extends Action
 
 	public function isPhoneAvailable() {
 		$mobile = t($_POST['phone']);
-		$res = preg_match("/^[1][358]\d{9}$/", $mobile, $matches) !== 0;
+		$res = preg_match("/^[1][3578]\d{9}$/", $mobile, $matches) !== 0;
 		if (!$res) {
 			$this->ajaxReturn(null, '无效的手机号', 0);
 		}
-		$count = model('User')->where('`login`="'.mysql_escape_string($mobile).'"')->count();
+		$count = model('User')->where('`phone`="'.mysql_escape_string($mobile).'"')->count();
 		if ($res && $count == 0) {
 			$this->ajaxReturn(null, '此手机号没有注册该站点', 0);
 		}
@@ -136,39 +136,87 @@ class PassportAction extends Action
 		$this->ajaxReturn(null, '验证通过', 1);
 	}
 
-	public function isRegCodeAvailable() {
-		$mobile = t($_POST['phone']);
-		$code = t($_POST['regCode']);
-		$result = model('Captcha')->checkPasswordCode($mobile, $code);
-		if ($result) {
+	// public function isRegCodeAvailable() {
+	// 	$mobile = t($_POST['phone']);
+	// 	$code = t($_POST['regCode']);
+	// 	$result = model('Captcha')->checkPasswordCode($mobile, $code);
+	// 	if ($result) {
+	// 		$this->ajaxReturn(null, '验证通过', 1);
+	// 	} else {
+	// 		$this->ajaxReturn(null, '验证码错误', 0);
+	// 	}
+	// }
+
+	/**
+	 * 验证手机验证码是否正确
+	 *
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function isRegCodeAvailable()
+	{
+		$phone = floatval($_POST['phone']);
+		$code  = intval($_POST['regCode']);
+
+		/* # 检查验证码是否正确 */
+		if (($sms = model('Sms')) and $sms->CheckCaptcha($phone, $code)) {
 			$this->ajaxReturn(null, '验证通过', 1);
-		} else {
-			$this->ajaxReturn(null, '验证码错误', 0);
 		}
+
+		$this->ajaxReturn(null, $sms->getMessage(), 0);
 	}
 
-	public function sendPasswordCode() {
-		$mobile = t($_POST['mobile']);
-		$res = preg_match("/^[1][358]\d{9}$/", $mobile, $matches) !== 0;
-		if (!$res) {
+	// public function sendPasswordCode() {
+	// 	$mobile = t($_POST['mobile']);
+	// 	$res = preg_match("/^[1][3578]\d{9}$/", $mobile, $matches) !== 0;
+	// 	if (!$res) {
+	// 		$this->ajaxReturn(null, '无效的手机号', 0);
+	// 	}
+	// 	$count = model('User')->where('`phone`="'.mysql_escape_string($mobile).'"')->count();
+	// 	if ($res && $count == 0) {
+	// 		$this->ajaxReturn(null, '此手机号没有注册该站点', 0);
+	// 	}
+	// 	$res = model('Captcha')->sendPasswordCode($mobile);
+	// 	if ($res) {
+	// 		$this->ajaxReturn(null, '发送成功', 1);
+	// 	} else {
+	// 		$this->ajaxReturn(null, model('Captcha')->getLastError(), 0);
+	// 	}
+	// }
+
+	/**
+	 * 发送找回密码验证码
+	 *
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function sendPasswordCode()
+	{
+		$phone = floatval($_POST['mobile']);
+
+		/* # 检查是否是手机号码 */
+		if (!preg_match("/^[1][3578]\d{9}$/", $isPhoneAvailable)) {
 			$this->ajaxReturn(null, '无效的手机号', 0);
-		}
-		$count = model('User')->where('`login`="'.mysql_escape_string($mobile).'"')->count();
-		if ($res && $count == 0) {
-			$this->ajaxReturn(null, '此手机号没有注册该站点', 0);
-		}
-		$res = model('Captcha')->sendPasswordCode($mobile);
-		if ($res) {
+
+		/* # 检查用户是否没有注册 */
+		} elseif (model('User')->isChangePhone($phone)) {
+			$this->ajaxReturn(null, '此手机号没有注册用户', 0);
+
+		/* # 发送验证码是否成功 */
+		} elseif (($sms = model('Sms')) and $sms->sendCaptcha($phone, true)) {
 			$this->ajaxReturn(null, '发送成功', 1);
-		} else {
-			$this->ajaxReturn(null, model('Captcha')->getLastError(), 0);
 		}
+
+		$this->ajaxReturn(null, $sms->getMessage(), 0);
 	}
 
 	public function doFindPasswordByMobile() {
 		$mobile = t($_POST['phone']);
 		$code = t($_POST['regCode']);
-		$result = model('Captcha')->checkPasswordCode($mobile, $code);
+		// $result = model('Captcha')->checkPasswordCode($mobile, $code);
+
+		$result = model('Sms')->CheckCaptcha($phone, $code);
+
 		if ($result) {
 			$map['login'] = $mobile;
 			$user = model('User')->where($map)->find();

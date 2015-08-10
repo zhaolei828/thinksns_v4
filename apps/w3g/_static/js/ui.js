@@ -340,6 +340,8 @@ $.ui = {
         if($.os.android || $.os.android || $.os.webos || $.os.touchpad || $.os.blackberry || $.os.ipad || $.os.iphone || $.os.ios){return true;}else{return false;}
     },
     isWeChat:function(){
+        /* # 临时解决，关闭微信适配 */
+        return false;
         var ua = navigator.userAgent.toLowerCase();
         if(ua.match(/MicroMessenger/i)=="micromessenger") {
             return true;

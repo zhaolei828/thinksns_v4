@@ -242,10 +242,14 @@ class PublicAction extends Action {
 		}
 
 		$email && $email_correct = $service->isValidEmail($email);
-		$verify && $verify_correct = (md5(strtoupper($verify)) == $_SESSION['verify']);
+		// $verify && $verify_correct = (md5(strtoupper($verify)) == $_SESSION['verify']);
+		/* # 验证邮箱验证码是否不正确 */
+		$verify and $verify_correct = model('Sms')->checkEmailCaptcha($email, $verify);
 
 		$phone && $phone_correct = $service->isValidPhone($phone);
-		$regCode && $regCode_correct = $service->isValidRegCode($regCode);
+		// $regCode && $regCode_correct = $service->isValidRegCode($regCode);
+		/* # 验证手机验证码是否不正确 */
+		$
 
 		$uname_correct = $service->isValidName($uname);
 		$password_correct = $service->isValidPassword($_POST['password'],$_POST['repassword']);
@@ -419,7 +423,7 @@ class PublicAction extends Action {
 		if (!$res) {
 			$this->ajaxReturn(null, '无效的手机号', 0);
 		}
-		$count = model('User')->where('`login`="'.mysql_escape_string($mobile).'"')->count();
+		$count = model('User')->where('`phone`="'.mysql_escape_string($mobile).'"')->count();
 		if ($res && $count == 0) {
 			$this->ajaxReturn(null, '此手机号没有注册该站点', 0);
 		}
@@ -431,7 +435,7 @@ class PublicAction extends Action {
 	 * 验证码是否有效
 	 * @return json
 	 */
-	public function isRegCodeAvailable() {
+	/*public function isRegCodeAvailable() {
 		$mobile = t($_POST['phone']);
 		$code = t($_POST['regCode']);
 		$result = model('Captcha')->checkPasswordCode($mobile, $code);
@@ -440,13 +444,28 @@ class PublicAction extends Action {
 		} else {
 			$this->ajaxReturn(null, '验证码错误，请检查验证码', 0);
 		}
+	}*/
+
+	/**
+	 * 验证验证码是否有效
+	 *
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function isRegCodeAvailable()
+	{
+		$phone = floatval($_POST['phone']);
+		$code  = intval($_POST['regCode']);
+		$sms   = model('Sms');
+		$sms->CheckCaptcha($phone, $code) or $this->ajaxReturn(null, $sms->getMessage(), 0);
+		$this->ajaxReturn(null, '验证通过', 1);
 	}
 
         /**
 	 * 发送手机验证码
 	 * @return json
 	 */
-	public function sendPasswordCode() {
+	/*public function sendPasswordCode() {
 		$mobile = t($_POST['mobile']);
 		$res = preg_match("/^[1][358]\d{9}$/", $mobile, $matches) !== 0;
 		if (!$res) {
@@ -462,13 +481,39 @@ class PublicAction extends Action {
 		} else {
 			$this->ajaxReturn(null, model('Captcha')->getLastError(), 0);
 		}
+	}*/
+
+	/**
+	 * 发送手机验证码
+	 *
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function sendPasswordCode()
+	{
+		$phone = floatval($_POST['mobile']);
+
+		/* # 检查手机号码格式是否正确 */
+		if (!preg_match('/^\+?[0\s]*[\d]{0,4}[\-\s]?\d{4,12}$/', $phone)) {
+			$this->ajaxReturn(null, '无效的手机号码', 0);
+
+		/* # 检查手机是否没有被注册 */
+		} elseif (model('User')->isChangePhone($phone)) {
+			$this->ajaxReturn(null, '该手机号码未注册用户', 0);
+
+		/* # 发送验证码 */
+		} elseif (($sms = model('Sms')) and $sms->CheckCaptcha($phone, true)) {
+			$this->ajaxReturn(null, '发送成功', 1);
+		}
+
+		$this->ajaxReturn(null, $sms->getMessage(), 0);
 	}
 
         /**
 	 * 通过手机找回密码
 	 * @return json
 	 */
-	public function doFindPasswordByMobile() {
+	/*public function doFindPasswordByMobile() {
 		$mobile = t($_POST['phone']);
 		$code = t($_POST['regCode']);
 		$result = model('Captcha')->checkPasswordCode($mobile, $code);
@@ -489,7 +534,44 @@ class PublicAction extends Action {
 		} else {
 			$this->ajaxReturn(null, '发送失败', 0);
 		}
+	}*/
+
+	/**
+	 * 通过手机找回密码
+	 *
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function doFindPasswordByMobile()
+	{
+		$phone = floatval($_POST['phone']);
+		$code  = intval($_POST['regCode']);
+		$sms   = model('Sms');
+
+		/* # 检查验证码 */
+		$sms->CheckCaptcha($phone, $code) or $this->ajaxReturn(null, $sms->getMessage(), 0);
+
+		unset($sms);
+
+		/* # 生成找回密码代码 */
+		$user = model('User')->where('`phone` = ' . $phone)->field('`uid`, `phone`, `password`')->find();
+		$code = md5($user['uid'] . '+' . $user['password'] . '+' . rand(1111, 9999));
+
+		/* # 设置旧的code过期 */
+		D('find_password')->where('`uid` = ' . $user['uid'])->setField('is_used', 1);
+
+		/* # 添加新的代码 */
+		D('find_password')->add(array(
+			'uid'   => $user['uid'],
+			'email' => $user['phone'],
+			'code'  => $code,
+			'is_used' => 0
+		));
+		$this->ajaxReturn(array(
+			'url' => U('w3g/Public/resetPassword', array('code' => $code))
+		), '发送成功', 1);
 	}
+
 	/**
 	 * 重置密码页面
 	 * @return void

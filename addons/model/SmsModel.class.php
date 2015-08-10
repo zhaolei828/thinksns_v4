@@ -1,346 +1,506 @@
 <?php
 /**
  * 短信模型
- * @author liuxiaoqing@zhishisoft.com 
- * @version TS3.0
- * Type   level
- * 动态密码=0    0
- * gsm数据=1     15
- * 淘宝通知=2    5
- * 找回密码=3    0
- * 手机注册码=4  0
- * 其他活动=5    5
- * 手机认证码=6  0
- */
-class SmsModel extends Model {
-	var $trueTableName = 'ts_sms';
-	var $error = '';
-	
-	//获取错误信息
-	public function getError(){
-		return $this->error;
+ *
+ * @package ThinkSNS\Medz\Model\SMS
+ * @author Medz Seven <lovevipdsw@vip.qq.com>
+ **/
+class SmsModel extends Model
+{
+	/**
+	 * 校验锁时间，单位秒
+	 *
+	 * @var int
+	 **/
+	const LOCKTIME = 60;
+
+	/**
+	 * 短信服务器地址
+	 *
+	 * @var string
+	 **/
+	protected $url;
+
+	/**
+	 * 发送服务器参数
+	 *
+	 * @var string
+	 **/
+	protected $param;
+
+	/**
+	 * 成功返回表示代码
+	 *
+	 * @var string
+	 **/
+	protected $resultCode;
+
+	/**
+	 * 发送方式 
+	 * type [auto,post,get] auto标识get+post并存
+	 *
+	 * @var string
+	 **/
+	protected $type = 'auto';
+
+	/**
+	 * 短信平台提供商
+	 *
+	 * @var string
+	 **/
+	protected $provider = 'auto';
+
+	/**
+	 * 短信模板
+	 *
+	 * @var string
+	 **/
+	protected $template = '您的验证码是：{rand}。如非本人操作，可不用理会！';
+
+	/**
+	 * 消息
+	 *
+	 * @var string
+	 **/
+	private $message;
+
+	/**
+	 * 短信记录表
+	 *
+	 * @var string
+	 **/
+	protected $tableName = 'sms';
+
+	/**
+	 * 数据表保护字段成员
+	 *
+	 * @var array
+	 **/
+	protected $fields = array('phone', 'code', 'message', 'time');
+
+	/**
+	 * 储存Curl对象的变量
+	 *
+	 * @var object
+	 **/
+	protected $curl;
+
+	/**
+	 * 用户发送的手机号码
+	 *
+	 * @var int
+	 **/
+	protected $phone;
+
+	/**
+	 * 验证码代码
+	 *
+	 * @var int
+	 **/
+	protected $code;
+
+	/**
+	 * 构造方法 - 获取短信数据配置
+	 *
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	final public function __construct($name = '')
+	{
+		parent::__construct($name);
+		$conf = model('Xdata')->get('admin_Config:sms');
+
+		$this->url   = $conf['sms_server'];
+		$this->param = $conf['sms_param'];
+		$this->resultCode = strtolower($conf['success_code']);
+		$this->type       = $conf['send_type'];
+		$this->provider   = $conf['service'];
+
+		$conf['template'] and $this->template = $conf['template'];
+
+		unset($conf);
+
+		$this->curl = curl_init();
+
+		$this->code = rand(1000, 9999);
 	}
 
 	/**
-	 * 发送短信
+	 * 析构方法 - 主要关闭curl
 	 *
-	 * @param int $tel 需要发送到的电话号码
-	 * @param string $message 需要发送的消息
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	final public function __destruct()
+	{
+		curl_close($this->curl);
+	}
+
+	/**
+	 * 设置消息
+	 *
+	 * @param string $message 消息
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	protected function setMessage($message)
+	{
+		$this->message = $message;
+	}
+
+	/**
+	 * 获取消息
+	 *
+	 * @return string
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function getMessage()
+	{
+		return $this->message;
+	}
+
+	/**
+	 * 获取验证码
+	 *
+	 * @return int
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function getCode()
+	{
+		return $this->code;
+	}
+
+	/**
+	 * 所以方法方法前置方法
+	 *
 	 * @return bool
 	 * @author Medz Seven <lovevipdsw@vip.qq.com>
 	 **/
-	public function newSendSMS($tel, $message)
+	protected function allBefore()
 	{
-		$config = model('Xdata')->get('admin_Config:sms');
-		$url    = $config['sms_server'];
-		$param  = $config['sms_param'];
-		$code   = $config['success_code'];
-		$type   = $config['send_type'];
-		$service= $config['service'];
+		/* # 检查短信平台地址 */
+		if (!$this->url) {
+			$this->setMessage('短信平台地址为空');
+			return false;
 
-		$param  = str_replace('{tel}', $tel, $param);
-		$param  = str_replace('{message}', rawurlencode($message), $param);
+		/* # 检查手机号码是否为空 */
+		} elseif (!$this->phone) {
+			$this->setMessage('手机号码不能为空');
+			return false;
 
-		if ($type == 'get') {
-			$url .= strpos($url, '?') ? '&' : '?';
-			$url .= $param;
+		/* # 检查CURL对象 */
+		} elseif (!$this->curl) {
+			$this->setMessage('初始化发送组建失败！');
 		}
 
-		$result = $this->httppost($param, $url);
+		return true;
+	}
 
-		switch (strtolower($service)) {
-			// # 互亿互联
+	/**
+	 * 发送数据
+	 *
+	 * @return string
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	protected function curl()
+	{
+		/* # set url addres */
+		curl_setopt($this->curl, CURLOPT_URL, $this->url);
+		curl_setopt($this->curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($this->curl, CURLOPT_HEADER, false);
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->curl, CURLOPT_NOBODY, true);
+        curl_setopt($this->curl, CURLOPT_POST, true);
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $this->param);
+
+        return curl_exec($this->curl);
+	}
+
+	/**
+	 * 发送
+	 *
+	 * @return bool
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	protected function send()
+	{
+		$result = $this->curl();
+		switch (strtolower($this->provider)) {
+			/* # 互亿无线 */
 			case 'ihuyi':
-				$return = $this->_ihuyi($result);
+				$result = $this->ihuyi($result);
 				break;
 			
 			default:
-				$return = false;
+				$result = $this->auto($result);
 				break;
 		}
 
-		$return or $return = $this->_code($result, $code);
+		$result or $this->getMessage() or $this->setMessage('发送失败');
 
-		return $return;
+		return $result;
 	}
 
+	/*========================发送结果检验方法区域================*/
+
 	/**
-	 * 互亿互联 短信平台返回成功标识判断
+	 * 自适应校验发送是否成功
 	 *
-	 * @param string $result 发信服务器返回的数据
+	 * @param string $data 数据;
 	 * @return bool
 	 * @author Medz Seven <lovevipdsw@vip.qq.com>
 	 **/
-	private function _ihuyi($result)
+	protected function auto($data)
 	{
-		$xml = simplexml_load_string($result);
-		if (intval($xml->code) == 2) {
+		$data = strtolower($data);
+		return strstr($data, $this->resultCode);
+	}
+
+	/**
+	 * 互亿无线平台校验
+	 *
+	 * @param string $data 数据
+	 * @return bool
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	protected function ihuyi($data)
+	{
+		$data = simplexml_load_string($data);
+		$data = json_encode($data);
+		$data = json_decode($data, false);
+		$this->setMessage($data->msg);
+		if (intval($data->code) == 2) {
 			return true;
 		}
 		return false;
 	}
 
+	/*========================End=================================*/
+
 	/**
-	 * 根据成功返回标识判断是否发信成功
+	 * undocumented function
 	 *
-	 * @param string $result 发信服务器返回的数据
-	 * @param string $code 用来判断的code代码标识
+	 * @return void
+	 * @author 
+	 **/
+	protected function buildParam()
+	{
+		$this->param = str_replace('{tel}', $this->phone, $this->param);
+		$this->template = str_replace('{rand}', $this->code, $this->template);
+		$this->param = str_replace('{message}', rawurlencode($this->template), $this->param);
+
+		if (in_array($this->type, array('auto', 'get'))) {
+			$this->url = parse_url($this->url);
+			isset($this->url['query']) and $this->url['query'] .= '&';
+			$this->url['query'] .= $this->param;
+
+			$url = '';
+			$this->url['scheme'] and $url .= $this->url['scheme'] . '://';
+			$this->url['host']   and $url .= $this->url['host'];
+			$this->url['port']   and $url .= ':' . $this->url['port'];
+			$this->url['path']   and $url .= $this->url['path'];
+			$this->url['query']  and $url .= '?' . $this->url['query'];
+			$this->url = $url;
+			unset($url);
+		}
+	}
+
+	/**
+	 * 时间锁，检查是否不可以发送
+	 *
 	 * @return bool
 	 * @author Medz Seven <lovevipdsw@vip.qq.com>
 	 **/
-	private function _code($result, $code)
+	protected function lock()
 	{
-		return (bool)strpos($result, $code);
-	}
+		$lockName = 'captcha_lock_' . $this->phone;
+		$lickTime = $_SESSION[$lockName];
 
-	public function send_sms($tel,$content){
-
-		// # 兼容一些未知位置
-		return $this->newSendSMS($tel, $content);
-
-        //获取发送短信账号和密码
-        // mb_detect_encoding($content);
-        $sms_config = model('Xdata')->get('admin_Config:sms');
-        $target = $sms_config['sms_server'];
-        // $name = $sms_config['sms_account'];
-        $pwd = $sms_config['sms_password'];
-
-        //替换成自己的测试账号,参数顺序和wenservice对应
-        $post_data = "account=".$name."&password=".$pwd."&mobile=".$tel."&content=".rawurlencode($content);
-        //$binarydata = pack("A", $post_data);
-        $gets = $this->httppost($post_data, $target);
-		/*        $gets = '<?xml version="1.0" encoding="utf-8"?>
-		<SubmitResult xmlns="http://121.199.16.178/">
-		<code>2</code>
-		<msg>提交成功</msg>
-		<smsid>12437361</smsid>
-		</SubmitResult>';
-		*/
-       	$res = simplexml_load_string($gets);
-       	// dump($res);
-        $return['code'] = intval($res->code);
-        $return['msg'] = strval($res->msg);
-        $return['smsid'] = intval($res->smsid);
-        return $return;
-    }
-
-    private function httppost($curlPost,$url){
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_NOBODY, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $curlPost);
-        $return_str = curl_exec($curl);
-        curl_close($curl);
-        return $return_str;
-    }
-
-	//发送短信
-	public function send($data){
-		if(!$data['Mobile']) return false;
-		$res = $this->add($data);
-		if($res){
-			// //测试用begin
-			// $map['ID'] = $res;
-			// $this->where($map)->setField('Status',1);
-			// return 1;
-			// //测试用end
-			$tel = $data['Mobile'];
-			$content = $data['smsContent'];
-			// $smsres = $this->send_sms($tel,$content);
-			// if($smsres['code']==2){
-			if ($this->newSendSMS($tel, $content)) {
-				$map['ID'] = $res;
-				$this->where($map)->setField('Status',1);
-				$this->error = '验证码发送成功';
-				return 1;
-			}else{
-				$this->error = '验证码发送失败';
-				return -1;
-			}
-		}else{
-			$this->error = '删除写入失败';
-			return 0;
-		}
-	}
-
-	//发送注册验证码
-	public function sendRegisterCode($tel, $from='web'){
-		// return false;
-		if (model('User')->where("phone='".$tel."'")->find() ){
-			$this->error = '该手机号码已经注册过了，请更换号码再试！';
-			return false;
-		}
-
-		//短信锁定
-		if(!$this->_smsLock($tel))
-			return false;
-
-		//发送注册短信
-		$tel = t($tel);
-		if(!$tel) return false;
-		$data['Mobile'] = $tel;
-		$data['Rand'] = rand(1111,9999);
-		$data['Type'] = 4;
-		$data['Status'] = 0;
-		$data['level'] = 0;
-		$data['AddDate'] = date('Y-m-d H:i:s');
-		$data['smsContent'] = '亲爱的用户，您的注册验证码为：'.$data['Rand'];
-		$data['from'] = $from;
-
-		$res = $this->send($data);
-		return $res;
-	}
-
-	//验证注册验证码
-	public function checkRegisterCode($tel,$code){
-		$map['Type'] = 4;
-		$map['Mobile'] = $tel;
-		if( !$code || !$tel){
-			return false;
-		}
-		$dbcode = $this->where($map)->order('ID desc')->getField('Rand');
-		return $dbcode == $code ? true : false;
-	}
-
-	//发送找回密码短信
-	public function sendPasswordCode($tel){
-		//短信锁定
-		if(!$this->_smsLock($tel))
-			return false;
-
-		if ( !model('User')->where("login='".$tel."'")->find() ){
-			$this->error = '该手机号关联不到相关用户信息';
-			return false;
-		}
-		//发送注册短信
-		$tel = t($tel);
-		if(!$tel) return false;
-		$data['Mobile'] = $tel;
-		$data['Rand'] = rand(1111,9999);
-		$data['Type'] = 3;
-		$data['Status'] = 0;
-		$data['level'] = 0;
-		$data['AddDate'] = date('Y-m-d H:i:s');
-		$data['smsContent'] = '亲爱的用户，您的找回密码验证码为：'.$data['Rand'];
-		$res = $this->send($data);
-		return $res;
-	}
-	
-	//重置密码
-	public function sendPassword($tel,$pwd){
-		$tel = t($tel);
-		if(!$tel) return false;
-		$map['login'] = $tel;
-		$setuser['login_salt'] = rand(10000,99999);
-		$setuser['password']   = md5(md5($pwd).$setuser['login_salt']);
-		$res = model( 'User' )->where( $map )->save($setuser);
-		return $res;
-	}
-
-	//发送重置的密码短信
-	public function sendPasswordApi($tel){
-		//发送注册短信
-		$tel = t($tel);
-		if(!$tel) return false;
-		$data['Mobile'] = $tel;
-		$data['Rand'] = rand(11111,99999);
-		$data['Type'] = 3;
-		$data['Status'] = 0;
-		$data['level'] = 0;
-		$data['AddDate'] = date('Y-m-d H:i:s');
-		tsload(ADDON_PATH.'brary/String.class.php');
-        $rndstr = String::rand_string( 5 , 3 );
-        $pwd = $rndstr.$data['Rand'];
-		$data['smsContent'] = '亲爱的用户，您的当前密码为：'.$pwd;
-		$res = $this->add($data);
-		$map['login'] = $tel;
-		$setuser['login_salt'] = rand(10000,99999);
-		$setuser['password']   = md5(md5($pwd).$setuser['login_salt']);
-		$res = model( 'User' )->where( $map )->save($setuser);
-		return $res;
-	}
-
-	//验证找回密码短信
-	public function checkPasswordCode($tel,$code){
-		$map['Type'] = 3;
-		$map['Mobile'] = $tel;
-		if( !$code || !$tel){
-			$this->error = '请输入验证码！';
-			return false;
-		}
-		$dbcode = $this->where($map)->order('ID desc')->getField('Rand');
-		if( $dbcode == $code ){
+		if ($lickTime > time()) {
+			$this->setMessage('请不要频繁发送，' . ($lickTime - time()) . '秒再试。');
 			return true;
-		} else {
-			$this->error = '验证码错误，请检查您的验证码！';
-			return false;
 		}
+
+		return false;
 	}
 
-	//发送绑定手机验证码
-	public function sendLoginCode($tel){
-		//短信锁定
-		if(!$this->_smsLock($tel))
-			return false;
+	/**
+	 * 时间加锁
+	 *
+	 * @param int $time 加锁的时间
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	protected function InLock($time = null)
+	{
+		/* # 判断是否有自定义事件 */
+		$time or $time = time() + self::LOCKTIME;
 
-		//发送注册短信
-		$tel = t($tel);
-		if(!$tel) return false;
-		$data['Mobile'] = $tel;
-		$data['Rand'] = rand(1111,9999);
-		$data['Type'] = 6;
-		$data['Status'] = 0;
-		$data['level'] = 0;
-		$data['AddDate'] = date('Y-m-d H:i:s');
-		$data['smsContent'] = '亲爱的用户，您的手机绑定验证码为：'.$data['Rand'];
-		$res = $this->send($data);
-		return $res;
+		/* # 兼容格式化时间，转为时间戳 */
+		is_numeric($time) or $time = strtotime($time);
+
+		$_SESSION['captcha_lock_' . $this->phone] = time();
 	}
 
-	//验证注册验证码
-	public function checkLoginCode($tel,$code){
-		$map['Type'] = 6;
-		$map['Mobile'] = $tel;
-		if( !$code || !$tel){
-			$this->error = '请输入验证码！';
+	/**
+	 * 发送验证码
+	 *
+	 * @param int $phone 要发送到的手机号码
+	 * @param bool $sendLock 发送锁，默认关闭
+	 * @return bool
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function sendCaptcha($phone, $sendLock = false)
+	{
+		$this->phone = $phone;
+		/* # 前置检查必要信息 */
+		if (!$this->allBefore()) {
+			return false;
+
+		/* # 检查锁 */
+		} elseif ($sendLock and $this->lock()) {
 			return false;
 		}
-		$dbcode = $this->where($map)->order('ID desc')->getField('Rand');
-		if( $dbcode == $code ){
-			return true;
-		} else {
-			$this->error = '验证码错误，请检查您的验证码！';
-			return false;
+
+		$this->buildParam();
+		$this->InLock();
+		
+		if ($result = $this->send()) {
+			$this->add(array(
+				'phone'   => $this->phone,
+				'code'    => $this->code,
+				'time'    => time()
+			));
 		}
+		return $result;
 	}
 
-	//短信锁
-	private function _smsLock($tel){
+	/**
+	 * 校验验证码是否正确
+	 *
+	 * @param float $phone 手机号码
+	 * @param int $code 验证码
+	 * @return bool
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function CheckCaptcha($phone, $code)
+	{
+		$data = $this->where('`phone` = ' . floatval($phone) . ' AND `message` = \'\' AND `code` != 0 AND `time` > ' . time() - 1800)->field('code')->order('`time` DESC')->getField('code');
+		$code = intval($code);
+		/* # 判断验证码是否为空 */
+		if (!$code) {
+			$this->setMessage('验证码不能为空');
+			return false;
 
-		//锁定时间
-		$locktime = 60;
-		//创建目录
-		if(!is_dir(SITE_PATH.'/data/smslock/'))
-			mkdir(SITE_PATH.'/data/smslock/',0777,true);
-		//锁文件
-		$lockfile = SITE_PATH.'/data/smslock/'.$tel.'.txt';
-		//文件验证时间间隔
-		if(file_exists($lockfile)){
-			if( ( time() - filemtime ($lockfile) ) < $locktime ){
-				$this->error = '请不要频繁发送，稍后再试。';
-				return false;
-			}else{
-				$k = fopen($lockfile,"a+");
-				fwrite($k,','.time());
-				fclose($k);
-			}
-		}else{
-			touch($lockfile);
+		/* # 判断是否有发送记录数据 */
+		} elseif (!$data) {
+			$this->setMessage('没有发送记录');
+			return false;
+
+		/* # 判断是否匹配 */
+		} elseif ($data != $code) {
+			$this->setMessage('验证码不正确');
+			return false;
 		}
+
 		return true;
 	}
-}
+
+	/**
+	 * 发送短息消息
+	 *
+	 * @param int $phone 手机号码
+	 * @param string $message 短信内容
+	 * @param bool $sendLock 时间锁， 默认关闭
+	 * @return bool
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function sendMessage($phone, $message, $sendLock = false)
+	{
+		$this->phone = $phone;
+		$this->template = $message;
+
+		/* # 前置必要条件检查 */
+		if (!$this->allBefore()) {
+			return false;
+
+		/* # 锁检查 */
+		} elseif ($sendLock and $this->lock()) {
+			return false;
+		}
+
+		$this->buildParam();
+		$this->InLock();
+
+		if ($result = $this->send()) {
+			$this->add(array(
+				'phone'   => $this->phone,
+				'message' => $this->template,
+				'time'    => time()
+			));
+		}
+		return $result;
+	}
+
+	/**
+	 * 发送验证码到邮箱
+	 *
+	 * @param string $email 邮箱地址
+	 * @param boolean $sendLock 是否有时间锁
+	 * @return boolean
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function sendEmaillCaptcha($email, $sendLock = false)
+	{
+		$this->phone = $email;
+		/* # 判断是否是email */
+		if (!preg_match("/^\w+(?:[-+.']\w+)*@\w+(?:[-.]\w+)*\.\w+(?:[-.]\w+)*$/", $email)) {
+			$this->setMessage('邮箱格式不正确');
+			return false;
+		} elseif ($sendLock and $this->lock()) {
+			return false;
+		}
+
+		$this->InLock();
+
+		$this->add(array(
+			'phone' => $email,
+			'code'  => $this->code,
+			'time'  => time()
+		));
+		return true;
+	}
+
+	/**
+	 * 验证邮箱验证码正确性
+	 *
+	 * @param string $email 邮箱地址
+	 * @param int $code 验证码
+	 * @return boolean
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function checkEmailCaptcha($email, $code)
+	{
+		$code = intval($code);
+		$data = $this->where('`phone` LIKE \'' . t($email) . '\' AND `code` != 0 AND `message` = \'\' AND time > ' . time() - 1800)->field('code')->order('`time` DESC')->getField('code');
+
+		/* # 检查邮箱地址是否为空 */
+		if (!$email) {
+			$this->setMessage('邮箱不能为空');
+			return false;
+
+		/* # 需要检验的验证码是否为空 */
+		} elseif (!$code) {
+			$this->setMessage('验证码不能为空');
+			return false;
+
+		/* # 检查验证码是否正确 */
+		} elseif ($data == $code) {
+			return true;
+		}
+
+		$this->setMessage('验证码不正确');
+		return false;
+	}
+
+} // END class SMSModel extends Model

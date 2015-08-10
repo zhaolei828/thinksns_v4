@@ -105,7 +105,6 @@ function _w3g_parse_expression($data) {
 
 //解析UBB标签 - wap版和web版解析应该不同
 function bbcodewap($message){
-
     $msglower = strtolower($message);
 
     if(strpos($msglower, '[/url]') !== FALSE) {
@@ -201,13 +200,7 @@ function bbcodewap($message){
     );
 
     $message = preg_replace($neter_mo,$neter_str,$message);
-
-    // $message = nl2br($message);
-    
     $message = h($message);
-
-    $message = wapFormatContent($message);
-
     return $message;
 }
 

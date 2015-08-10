@@ -3705,31 +3705,6 @@ TRUNCATE TABLE `ts_blog_favorite`;
 -- --------------------------------------------------------
 
 --
--- 表的结构 `ts_captcha`
---
-
-DROP TABLE IF EXISTS `ts_captcha`;
-CREATE TABLE IF NOT EXISTS `ts_captcha` (
-  `captcha_id` int(11) NOT NULL AUTO_INCREMENT,
-  `rand` varchar(15) NOT NULL,
-  `content` varchar(200) NOT NULL,
-  `communication` varchar(45) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `send_time` int(11) NOT NULL DEFAULT '0',
-  `add_time` int(11) NOT NULL DEFAULT '0',
-  `type` tinyint(4) NOT NULL DEFAULT '0',
-  `level` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`captcha_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- 插入之前先把表清空（truncate） `ts_captcha`
---
-
-TRUNCATE TABLE `ts_captcha`;
--- --------------------------------------------------------
-
---
 -- 表的结构 `ts_channel`
 --
 
@@ -7308,35 +7283,6 @@ TRUNCATE TABLE `ts_sitelist_site`;
 -- --------------------------------------------------------
 
 --
--- 表的结构 `ts_sms`
---
-
-DROP TABLE IF EXISTS `ts_sms`;
-CREATE TABLE IF NOT EXISTS `ts_sms` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` varchar(100) DEFAULT NULL,
-  `Rand` varchar(10) DEFAULT NULL,
-  `smsContent` varchar(200) DEFAULT NULL,
-  `Mobile` varchar(15) NOT NULL,
-  `Status` tinyint(1) DEFAULT '0',
-  `SendDate` datetime DEFAULT NULL,
-  `AddDate` datetime DEFAULT NULL,
-  `level` tinyint(3) DEFAULT '0',
-  `Type` tinyint(1) DEFAULT '0',
-  `MobileNetWork` varchar(100) DEFAULT 'null',
-  `IsExport` tinyint(4) DEFAULT '0',
-  `from` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- 插入之前先把表清空（truncate） `ts_sms`
---
-
-TRUNCATE TABLE `ts_sms`;
--- --------------------------------------------------------
-
---
 -- 表的结构 `ts_survey`
 --
 
@@ -9564,6 +9510,33 @@ INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
 ('pageKey', 'admin_Mobile_w3gLogo', 'a:6:{s:3:"key";a:1:{s:4:"logo";s:4:"logo";}s:8:"key_name";a:1:{s:4:"logo";s:0:"";}s:8:"key_type";a:1:{s:4:"logo";s:5:"image";}s:11:"key_default";a:1:{s:4:"logo";s:0:"";}s:9:"key_tishi";a:1:{s:4:"logo";s:0:"";}s:14:"key_javascript";a:1:{s:4:"logo";s:0:"";}}', '2015-07-24 12:05:59');
 INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
 ('pageKey', 'admin_Mobile_w3gAbout', 'a:6:{s:3:"key";a:1:{s:5:"about";s:5:"about";}s:8:"key_name";a:1:{s:5:"about";s:12:"关于我们";}s:8:"key_type";a:1:{s:5:"about";s:6:"editor";}s:11:"key_default";a:1:{s:5:"about";s:0:"";}s:9:"key_tishi";a:1:{s:5:"about";s:35:"设置3G页面关于我们的内容";}s:14:"key_javascript";a:1:{s:5:"about";s:0:"";}}', '2015-07-24 12:32:59');
+
+
+--
+-- 表结构 `ts_sms`
+--
+DROP TABLE IF EXISTS `ts_sms`;
+CREATE TABLE IF NOT EXISTS `ts_sms` (
+  `phone`   varchar(50)  NOT NULL             COMMENT '手机号码|兼容email验证码',
+  `code`    int(5)       NOT NULL DEFAULT '0' COMMENT '验证码',
+  `message` varchar(255) NOT NULL DEFAULT ''  COMMENT '消息',
+  `time`    varchar(20)  NOT NULL             COMMENT '时间',
+  KEY `idx_code` (`code`)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='手机验证码记录';
+
+--
+-- 不去修改原始的了，这里sql修改吧 --
+--
+UPDATE `ts_system_config` SET `value` = 'a:6:{s:3:"key";a:6:{s:10:"sms_server";s:10:"sms_server";s:9:"sms_param";s:9:"sms_param";s:12:"success_code";s:12:"success_code";s:8:"template";s:8:"template";s:9:"send_type";s:9:"send_type";s:7:"service";s:7:"service";}s:8:"key_name";a:6:{s:10:"sms_server";s:15:"短信服务器";s:9:"sms_param";s:12:"短信参数";s:12:"success_code";s:18:"成功返回标识";s:8:"template";s:12:"短信模板";s:9:"send_type";s:24:"短信参数发送方式";s:7:"service";s:15:"使用的平台";}s:8:"key_type";a:6:{s:10:"sms_server";s:4:"text";s:9:"sms_param";s:8:"textarea";s:12:"success_code";s:8:"textarea";s:8:"template";s:4:"text";s:9:"send_type";s:5:"radio";s:7:"service";s:6:"select";}s:11:"key_default";a:6:{s:10:"sms_server";s:0:"";s:9:"sms_param";s:0:"";s:12:"success_code";s:0:"";s:8:"template";s:0:"";s:9:"send_type";s:0:"";s:7:"service";s:0:"";}s:9:"key_tishi";a:6:{s:10:"sms_server";s:0:"";s:9:"sms_param";s:120:"多个参数使用英文半角“&”符号分隔“{tel}”为用户手机号码，“{message}”用户接受的消息";s:12:"success_code";s:93:"用于检索发信是否成功，存在成功标识则表示发信成功，否则标识失败";s:8:"template";s:75:"模板中需要包含验证码，所以，“{rand}”表示为验证码。";s:9:"send_type";s:90:"方式请根据您使用的短信平台选择，错误的选择可能导致发信失败！";s:7:"service";s:415:"选择使用的平台，更容易判断是否发信成功！如果没有选择，那么默认使用成功返回标识判断，如果选择的平台方法不能判断，也会默认使用成功返回标识判断！如果您使用的短信平台不在默认配置当中，请到达/addons/model/SmsModel.class.php新增，然后再/apps/admin/lib/ConfigAction.class.php,文件function sms增您的方法到array中！";}s:14:"key_javascript";a:6:{s:10:"sms_server";s:0:"";s:9:"sms_param";s:0:"";s:12:"success_code";s:0:"";s:8:"template";s:0:"";s:9:"send_type";s:0:"";s:7:"service";s:0:"";}}' WHERE `list` = 'pageKey' AND `key` = 'admin_Config_sms';
+DELETE FROM `ts_system_config` WHERE `list` = 'pageKey' AND `key` = 'admin_Application_socket';
+INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
+('pageKey', 'admin_Application_socket', 'a:6:{s:3:"key";a:1:{s:12:"socketaddres";s:12:"socketaddres";}s:8:"key_name";a:1:{s:12:"socketaddres";s:21:"Socket服务器地址";}s:8:"key_type";a:1:{s:12:"socketaddres";s:4:"text";}s:11:"key_default";a:1:{s:12:"socketaddres";s:0:"";}s:9:"key_tishi";a:1:{s:12:"socketaddres";s:79:"设置APP端调用的Socket服务器地址，例如”demo.thinksns.com:1243“";}s:14:"key_javascript";a:1:{s:12:"socketaddres";s:0:"";}}', '2015-08-07 09:30:09');
+
+DELETE FROM `ts_system_config` WHERE `list` = 'pageKey' AND `key` = 'admin_Application_index';
+DELETE FROM `ts_system_config` WHERE `list` = 'pageKey' AND `key` = 'admin_Application_addSlide';
+INSERT INTO `ts_system_config` (`list`, `key`, `value`, `mtime`) VALUES
+('pageKey', 'admin_Application_index', 'a:4:{s:3:"key";a:5:{s:5:"title";s:5:"title";s:5:"image";s:5:"image";s:4:"type";s:4:"type";s:4:"data";s:4:"data";s:8:"doAction";s:8:"doAction";}s:8:"key_name";a:5:{s:5:"title";s:6:"标题";s:5:"image";s:6:"图片";s:4:"type";s:6:"类型";s:4:"data";s:6:"数据";s:8:"doAction";s:6:"操作";}s:10:"key_hidden";a:5:{s:5:"title";s:1:"0";s:5:"image";s:1:"0";s:4:"type";s:1:"0";s:4:"data";s:1:"0";s:8:"doAction";s:1:"0";}s:14:"key_javascript";a:5:{s:5:"title";s:0:"";s:5:"image";s:0:"";s:4:"type";s:0:"";s:4:"data";s:0:"";s:8:"doAction";s:0:"";}}', '2015-07-31 09:05:01'),
+('pageKey', 'admin_Application_addSlide', 'a:6:{s:3:"key";a:4:{s:5:"title";s:5:"title";s:5:"image";s:5:"image";s:4:"type";s:4:"type";s:4:"data";s:4:"data";}s:8:"key_name";a:4:{s:5:"title";s:12:"轮播标题";s:5:"image";s:12:"轮播图片";s:4:"type";s:12:"跳转类型";s:4:"data";s:12:"类型参数";}s:8:"key_type";a:4:{s:5:"title";s:4:"text";s:5:"image";s:5:"image";s:4:"type";s:6:"select";s:4:"data";s:4:"text";}s:11:"key_default";a:4:{s:5:"title";s:0:"";s:5:"image";s:0:"";s:4:"type";s:0:"";s:4:"data";s:0:"";}s:9:"key_tishi";a:4:{s:5:"title";s:30:"幻灯片显示的文字信息";s:5:"image";s:0:"";s:4:"type";s:63:"选择轮播点击后跳转位置，默认仅展示轮播图片";s:4:"data";s:300:"当存在跳转类型的时候必须设置，否则APP会出错，举例：选择“url地址”,则这里填写url地址，app上点击会跳转到该地址，例如：选择“微吧”，那么类型参数则填写一个微吧的ID，app上点击后直接进入该微吧，其他不一一列举！";}s:14:"key_javascript";a:4:{s:5:"title";s:0:"";s:5:"image";s:0:"";s:4:"type";s:0:"";s:4:"data";s:0:"";}}', '2015-07-31 07:53:09');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -235,7 +235,7 @@ class Message
             try{
                 $db->query($sql);
                 $room = array(
-                    'room_id' => $room_id,
+                    'room_id' => (int)$room_id,
                     'master_uid'  => $from_uid,
                     'is_group' => true,
                     'title'  => $title,
@@ -426,7 +426,7 @@ class Message
         $uid = intval(self::getLoggedUserInfo('uid'));
         try{
             // 检查权限
-            if(!self::checkGroupPermissions($room_id, $uid, true, null)){
+            if(!self::checkGroupPermissions($room_id, $uid, false, null)){
                 return false;
             }
             // 设置房间信息
@@ -565,38 +565,46 @@ class Message
                 $return[$key]['is_group'] = $rs['type'] != 1;
                 $return[$key]['title']  = (string)Util::htmlDecode($rs['title']);
                 $return[$key]['mtime'] = (int)$rs['mtime'];
-
+                $return[$key]['self_index'] = null;
                 // 取得全部用户的信息
                 $users = self::getUserInfo(explode('_', $rs['min_max']));
                 // 取得成员列表
-                $members = $db->select('`member_uid`,`ctime`,`list_ctime`')
+                $members = $db->select('`member_uid`,`ctime`,`list_ctime`,`new`,`message_num`')
                     ->from($member)->where('list_id='.$rs['list_id'])
                     ->orderByASC(array('id'))->query();
                 if(!$members){
                     $members = array();
                 }
+                $i = 0;
                 $member_list = array();
-                foreach($members as $i => $row){
+                foreach($members as $row){
                     if(isset($users[$row['member_uid']])){
-                        $member_list[$i]['uid'] = $row['member_uid'];
+                        $member_list[$i]['uid'] = (int)$row['member_uid'];
                         $member_list[$i]['uname'] = $users[$row['member_uid']]['uname'];
-                        $member_list[$i]['ctime'] = $row['ctime'];
-                        $member_list[$i]['mtime'] = $row['list_ctime'];
+                        $member_list[$i]['ctime'] = (int)$row['ctime'];
+                        $member_list[$i]['mtime'] = (int)$row['list_ctime'];
+                        $member_list[$i]['message_new'] = (int)$row['new'];
+                        $member_list[$i]['message_num'] = (int)$row['message_num'];
+                        if($row['member_uid'] == $uid){
+                            $return[$key]['self_index'] = $i;
+                        }
+                        $i++;
                     }
                 }
                 $return[$key]['last_message'] = array();
                 if($rs['last_message']){
                     $last_message = @unserialize($rs['last_message']);
                     if(is_array($last_message)){
-                        $return[$key]['content'] = isset($last_message['content'])?$last_message['content']:'';
-                        $return[$key]['type'] = isset($last_message['type'])?$last_message['type']:'text';
-                        $return[$key]['mtime'] = isset($last_message['mtime'])?$last_message['mtime']:'0';
+                        $return[$key]['last_message']['message_id'] = isset($last_message['message_id'])?$last_message['message_id']:null;
+                        $return[$key]['last_message']['content'] = isset($last_message['content'])?$last_message['content']:'';
+                        $return[$key]['last_message']['type'] = isset($last_message['type'])?$last_message['type']:'text';
+                        $return[$key]['last_message']['mtime'] = isset($last_message['mtime'])?$last_message['mtime']:'0';
                         if(isset($last_message['from_uid'])){
-                            $return[$key]['from_uid'] = $last_message['from_uid'];
-                            $return[$key]['from_uname'] = @(string)$users[$last_message['from_uid']]['uname'];
+                            $return[$key]['last_message']['from_uid'] = $last_message['from_uid'];
+                            $return[$key]['last_message']['from_uname'] = @(string)$users[$last_message['from_uid']]['uname'];
                         }else{
-                            $return[$key]['from_uid'] = 0;
-                            $return[$key]['from_uname'] = '';
+                            $return[$key]['last_message']['from_uid'] = 0;
+                            $return[$key]['last_message']['from_uname'] = '';
                         }
                     }
 
@@ -769,6 +777,7 @@ class Message
                     $return['attach_id'] = $message['attach_id'];
                 }
                 unset($return['list_id']);
+                $return['from_uname'] = self::getLoggedUserInfo('uname');
                 return array(
                     'return'  => $return,
                     'to_user_list' => $to_uid_list
@@ -868,16 +877,13 @@ class Message
         $array = array();
         $users = self::getUserInfo(Util::arrayColumn($list, 'from_uid'));
         foreach($list as $key => $rs){
-            if(!isset($users[$rs['from_uid']])){
-                continue;
-            }
-            $array[$key]['message_id'] = $rs['message_id'];
-            $array[$key]['from_uid'] = $rs['from_uid'];
-            $array[$key]['from_uname'] = $users[$rs['from_uid']]['uname'];
+            $array[$key]['message_id'] = (int)$rs['message_id'];
+            $array[$key]['from_uid'] = (int)$rs['from_uid'];
+            $array[$key]['from_uname'] = (string)$users[$rs['from_uid']]['uname'];
             $array[$key]['type'] = $rs['type'];
             $array[$key]['content'] = Util::htmlDecode($rs['content']);
-            $array[$key]['room_id'] = $rs['list_id'];
-            $array[$key]['mtime'] = $rs['mtime'];
+            $array[$key]['room_id'] = (int)$rs['list_id'];
+            $array[$key]['mtime'] = (int)$rs['mtime'];
             if(empty($rs['attach_ids'])){
                 $attach = array();
             }else{
@@ -1037,7 +1043,7 @@ class Message
         $table = self::table('user');
         // 准备用于查询的SQL语句
         $sql = "SELECT `uid`,`uname` FROM {$table} WHERE `uid` " .
-            "IN({$in_list}) ORDER BY FIELD(`uid`,{$in_list})";
+            "IN({$in_list}) AND `is_del`=0 ORDER BY FIELD(`uid`,{$in_list})";
         // 查询内容，并把uid设置为键名，并返回新数组
         return Util::arrayColumn($db->query($sql) ?: array(), null, 'uid');
     }

@@ -2142,7 +2142,7 @@ a.btn-account:hover{background-position:-164px 0;}
 .post-type .post-type-list .current a{ color:#0096e6;}
 .post-list{ width:100%;}
 .post-item-list li{width:100%;height:auto;margin-bottom:20px;overflow:hidden; }
-.post-list li{width:100%;height:auto;padding:20px 0;overflow:hidden; border-bottom:#F3F3F3 1px solid;cursor: pointer;}
+.post-list li{width:100%;height:auto;padding:20px 0;overflow:hidden; border-bottom:#F3F3F3 1px solid;/*cursor: pointer;*/}
 .post-list li:hover{ background:#f9fafa;}
 .post-item-list li .post-b{padding:20px; float:left; background:#fff;width:660px;}
 .post-item-list h2{font-size:20px;font-family:"微软雅黑"; font-weight:500;height:20px;line-height:20px;}

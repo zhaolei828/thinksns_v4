@@ -123,7 +123,41 @@ class RegisterModel extends Model {
 		return (boolean)$res;
 	}
 
-	public function isValidRegCode($regCode, $phone) {
+	/**
+	 * 验证注册验证码是否正确
+	 *
+	 * @param int $code 验证码
+	 * @param float $phone 手机号码
+	 * @return boolean
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function isValidRegCode($code, $phone)
+	{
+		/* # 安全过滤 */
+		$code  = intval($code);
+		$phone = floatval($phone);
+
+		/* # 验证手机号码是否为空 */
+		if (!$phone) {
+			$this->_error = '手机号不能为空';
+			return false;
+
+		/* # 验证验证码是否为空 */
+		} elseif (!$code) {
+			$this->_error = '验证码不能为空';
+			return false;
+
+		/* # 验证验证码是否错误 */
+		} elseif (($sms = model('Sms')) and !$sms->CheckCaptcha($phone, $code)) {
+			$this->_error = $sms->getMessage();
+			unset($sms);
+			return false;
+		}
+
+		return true;
+	}
+
+	/*public function isValidRegCode($regCode, $phone) {
 		if (empty($phone)) {
 			$this->_error = '手机号不能为空';
 			return false;
@@ -138,7 +172,7 @@ class RegisterModel extends Model {
 		}
 
 		return (boolean)$res;
-	}
+	}*/
 
 	/**
 	 * 验证昵称内容的正确性

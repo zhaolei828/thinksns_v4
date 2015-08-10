@@ -1653,7 +1653,7 @@ class FeedModel extends Model {
 		//$feed_ids = array_unique($feed_ids);
 		
 		//array_multisort($feed_ids, SORT_DESC);
-		//return $this->formatFeed($feed_ids, true);
+		return $this->formatFeed($feed_ids, true);
 	}
 
 	//获取后台推荐的分享

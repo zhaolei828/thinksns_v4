@@ -42,10 +42,33 @@ class UserModel extends Model {
 			31 => 'openid',
 			32 => 'input_city',
 			33 => 'is_fixed',
-                        34 => 'weibo_id',
 			'_autoinc' => true,
 			'_pk' => 'uid' 
 	);
+
+	/**
+	 * 检查用户是否存在
+	 *
+	 * @param strint $user 用户标识 uid|phone|uname|email
+	 * @return bool
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function hasUser($user, $isUid = false)
+	{
+        $map['is_del'] = 0;
+        if($isUid) {
+            $map['uid'] = $user;
+        }else if (false !== strpos($user, '@')){
+            $map['email'] = $user;
+        } elseif (preg_match('/^\+?[0\s]*[\d]{0,4}[\-\s]?\d{4,12}$/', $user)) {
+            $map['phone'] = $user;
+        } elseif (preg_match('/^[1-9]\d*$/', $user)) {
+            $map['uid|uname'] = $user;
+        } else {
+            $map['uname'] = $user;
+        }
+		return $this->where($map)->count() > 0;
+	}
 	
 	/**
 	 * 获取用户列表，后台可以根据用户组查询
@@ -987,6 +1010,7 @@ class UserModel extends Model {
 		$data ['avatar_small'] = $userInfo ['avatar_small'];
 		$data ['sex'] = $userInfo ['sex'];
 		$data ['intro'] = $userInfo ['intro'];
+        $data ['first_letter'] = $userInfo ['first_letter'];
 		$count = model ( 'UserData' )->getUserData ( $uid );
 		empty ( $count ['following_count'] ) && $count ['following_count'] = 0;
 		empty ( $count ['follower_count'] ) && $count ['follower_count'] = 0;
@@ -1328,7 +1352,7 @@ class UserModel extends Model {
 	 **/
 	public function isChangePhone($phone, $userID = null)
 	{
-		$uid = $this->where('`phone` = ' . $phone)->field('`uid`')->getField('uid');
+		$uid = $this->where('`is_del` = 0 AND `phone` = ' . $phone)->field('`uid`')->getField('uid');
 		if ($uid == $userID or !$uid) {
 			return true;
 		}
@@ -1345,7 +1369,7 @@ class UserModel extends Model {
 	 **/
 	public function isChangeEmail($email, $userID = null)
 	{
-		$uid = $this->where('`email` LIKE "' . $email . '"')->field('`uid`')->getField('uid');
+		$uid = $this->where('`is_del` = 0 AND `email` LIKE "' . $email . '"')->field('`uid`')->getField('uid');
 		if ($uid == $userID or !$uid) {
 			return true;
 		}
@@ -1362,17 +1386,11 @@ class UserModel extends Model {
 	 **/
 	public function isChangeUserName($userName, $userID = null)
 	{
-		$uid = $this->where('`uname` LIKE "' . $userName . '"')->field('`uid`')->getField('uid');
+		$uid = $this->where('`is_del` = 0 AND `uname` LIKE "' . $userName . '"')->field('`uid`')->getField('uid');
 		if ($uid == $userID or !$uid) {
 			return true;
 		}
 		return false;
-	}
-        
-        public function findUnameByWeiboId($weiboId)
-	{
-            $uid = $this->where('`weibo_id` = ' . $weiboId )->field('`uid`')->getField('uid');
-            return $uid;
 	}
 
 } // END class UserModel

@@ -799,7 +799,35 @@ class AccountAction extends Action {
         $this->display();
     }
 
-    public function doBindingMobile() {
+    /**
+     * 手机绑定设置
+     *
+     * @return void
+     * @author Medz Seven <lovevipdsw@vip.qq.com>
+     **/
+    public function doBindingMobile()
+    {
+        $phone = floatval($_POST['mobile']);
+        $code  = intval($_POST['mobile_code']);
+
+        /* # 检查用户是否不可以更改为当前手机号码 */
+        if (!model('User')->isChangePhone($phone, $this->mid)) {
+            $this->ajaxReturn(null, '当前手机号码不能用于绑定', 0);
+
+        /* # 检查验证码是否不正确 */
+        } elseif (($sms = model('Sms')) and !$sms->CheckCaptcha($phone, $code)) {
+            $this->ajaxReturn(null, $sms->getMessage(), 0);
+
+        /* # 验证是否修改成功 */
+        } elseif (model('User')->where('`uid` = ' . $this->mid)->setField('phone', $phone)) {
+            model('User')->cleanCache($this->mid);
+            $this->ajaxReturn(null, '设置成功', 1);
+        }
+
+        $this->ajaxReturn(null, '设置失败', 0);
+    }
+
+    /*public function doBindingMobile() {
         $mobile = t($_POST ['mobile']);
         if (!model('Register')->isValidPhone($mobile)) {
             $this->ajaxReturn(null, model('Register')->getLastError(), 0);
@@ -818,9 +846,37 @@ class AccountAction extends Action {
         } else {
             $this->ajaxReturn(null, '设置失败', 0);
         }
+    }*/
+
+    /**
+     * 绑定|更换邮箱
+     *
+     * @return void
+     * @author Medz Seven <lovevipdsw@vip.qq.com>
+     **/
+    public function doBindingEmail()
+    {
+        $email = t($_POST['email']);
+        $code  = intval($_POST['email_code']);
+
+        /* # 验证是否不可以修改 */
+        if (!model('User')->isChangeEmail($email, $this->mid)) {
+            $this->ajaxReturn(null, '该邮箱无法用于账户绑定', 0);
+
+        /* # 验证验证码是否不正确 */
+        } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
+            $this->ajaxReturn(null, $sms->getMessage(), 0);
+
+        /* # 重新设置email */
+        } elseif (model('User')->where('`uid` = ' . $this->mid)->setField('email', $email)) {
+            model('User')->cleanCache($this->mid);
+            $this->ajaxReturn(null, '设置成功', 1);
+        }
+
+        $this->ajaxReturn(null, '设置失败', 0);
     }
 
-    public function doBindingEmail() {
+    /*public function doBindingEmail2() {
         $email = t($_POST ['email']);
         if (!model('Register')->isValidEmail($email)) {
             $this->ajaxReturn(null, model('Register')->getLastError(), 0);
@@ -839,9 +895,59 @@ class AccountAction extends Action {
         } else {
             $this->ajaxReturn(null, '设置失败', 0);
         }
+    }*/
+
+    /**
+     * 获取验证码
+     *
+     * @return void
+     * @author Medz Seven <lovevipdsw@vip.qq.com>
+     **/
+    public function getCaptcha()
+    {
+        $type = t($_POST['type']);
+        $sms  = model('Sms');
+
+        /* # 判断是否类型错误 */
+        if (!in_array($type, array('mobile', 'email'))) {
+            $this->ajaxReturn(null, '参数错误', 0);
+
+        /* # 手机验证码获取 */
+        } elseif ($type == 'mobile') {
+            $phone = floatval($_POST['mobile']);
+
+            /* # 验证手机号是否存在 */
+            model('User')->where('`phone` = ' . $phone . ' AND `is_del` = 0')->field('`uid`')->count() and $this->ajaxReturn(null, '该手机号无法用于绑定', 0);
+
+            /* # 发送验证码 */
+            $sms->sendCaptcha($phone, true) and $this->ajaxReturn(null, '验证码已经发送到您手机，请注意查收', 1);
+            $this->ajaxReturn(null, $sms->getMessage(), 0);
+
+        /* # 获取邮箱验证码 */
+        } elseif ($type == 'email') {
+            $email = t($_POST['email']);
+
+            /* # 验证邮箱是否被使用 */
+            model('User')->where('`email` LIKE \'' . $email . '\' AND `is_del` = 0')->field('`uid`')->count() and $this->ajaxReturn(null, '该邮箱无法用于账户绑定', 0);
+
+            /* # 发送验证码 */
+            $sms->sendEmaillCaptcha($email, true) or $this->ajaxReturn(null, $sms->getMessage(), 0);
+
+            /* # 发送邮件 */
+            model('Notify')->sendNotifyChangeEmail($this->mid, 'email_verification', array(
+                'uname' => getUserName($this->mid),
+                'rand'  => $sms->getCode(),
+                'date'  => date('Y-m-d', time())
+            ), $email);
+
+            /* # 返回状态 */
+            $this->ajaxReturn(null, '验证码已经发送到您邮箱', 1);
+        }
+
+        unset($sms);
     }
 
-    public function getCaptcha() {
+    /*public function getCaptcha2() {
         $type = t($_POST ['type']);
         if (!in_array($type, array(
                     'mobile',
@@ -882,7 +988,7 @@ class AccountAction extends Action {
             empty($msg) && $msg = '发送失败';
             $this->ajaxReturn(null, $msg, 0);
         }
-    }
+    }*/
 
     public function scoredetail() {
         $user_info = model('User')->getUserInfo($this->mid);

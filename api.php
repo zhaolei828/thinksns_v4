@@ -25,9 +25,8 @@ if(isset($_REQUEST['api_version'])){
 require(SITE_PATH . '/core/core.php');
 
 //实例化一个网站应用实例
-$app = new App;
+$app = new Api;
 $app->run();
 unset($app);
-// (new Api)->run();
 
 /* # The end */

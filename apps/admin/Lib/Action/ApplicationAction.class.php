@@ -12,7 +12,7 @@ class ApplicationAction extends AdministratorAction
 {
 
 	/**
-	 * undocumented class variable
+	 * 轮播列表设置类型
 	 *
 	 * @var string
 	 **/
@@ -154,5 +154,24 @@ class ApplicationAction extends AdministratorAction
 		D('application_slide')->where('`id` = ' . $id)->delete();
 		$this->success('删除成功');
 	}
+
+	/*======================== Socket setting start ===========================*/
+	/**
+	 * Socket 服务器设置
+	 *
+	 * @return void
+	 * @author Medz Seven <lovevipdsw@vip.qq.com>
+	 **/
+	public function socket()
+	{
+		$this->pageKeyList = array('socketaddres');
+		array_push($this->pageTab, array(
+			'title' => 'Socket服务器地址设置',
+			'hash'  => 'socket',
+			'url'   => U('admin/Application/socket')
+		));
+		$this->displayConfig();
+	}
+	/*======================== Socket setting end   ===========================*/
 
 } // END class ApplicationAction extends AdministratorAction

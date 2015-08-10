@@ -20,12 +20,12 @@
     <!--<p>查找{$vo.user_group_name}</p>-->
     <ul class="clearfixul">
       <li>
-        <a <eq name="cid" value="$vo['user_group_id']"> class="current"</eq> href="{:U('people/Index/index', array('cid'=>$vo['user_group_id'],'type'=>$type,'pid'=>0))}">全部</a>
+        <a <eq name="cid" value="$vo['user_group_id']"><?php if(!$pid) { ?>class="current"<?php } ?></eq> href="{:U('people/Index/index', array('cid'=>$vo['user_group_id'],'type'=>$type,'pid'=>0))}">全部</a>
       </li>
       <volist name="vo.child" id="v">
       <!--<li <gt name="i" value="$showNums">style="display:none;"</gt>>-->
       <li>
-        <a <eq name="cid" value="$v['user_verified_category_id']"> class="current"</eq> href="{:U('people/Index/index', array('cid'=>$v['user_verified_category_id'],'type'=>$type,'pid'=>$vo['user_group_id']))}">{$v.title|getShort=###, 10}</a>
+        <a medz="{$pid}" <eq name="cid" value="$v['user_verified_category_id']"><?php if($pid) { ?>class="current"<?php } ?></eq> href="{:U('people/Index/index', array('cid'=>$v['user_verified_category_id'],'type'=>$type,'pid'=>$vo['user_group_id']))}">{$v.title|getShort=###, 10}</a>
       </li>
       </volist>
     </ul>

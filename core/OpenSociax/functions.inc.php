@@ -444,6 +444,10 @@ function M($name='',$app='@') {
 function D($name='', $app='@', $inclueCommonFunction=true) {
 	static $_model = array();
 
+	$name = str_replace(' ', '', $name);
+	$name = str_replace('#', '', $name);
+	$name = str_replace('--', '', $name);
+
 	if(empty($name)) return new Model;
 	if(empty($app) || $app=='@')   $app =  APP_NAME;
 
