@@ -1392,5 +1392,11 @@ class UserModel extends Model {
 		}
 		return false;
 	}
+        
+        public function findUnameByWeiboId($weiboId)
+	{
+            $uid = $this->where('`weibo_id` = ' . $weiboId )->field('`uid`')->getField('uid');
+            return $uid;
+	}
 
 } // END class UserModel
