@@ -42,6 +42,7 @@ class UserModel extends Model {
 			31 => 'openid',
 			32 => 'input_city',
 			33 => 'is_fixed',
+                        34 => 'weibo_id',
 			'_autoinc' => true,
 			'_pk' => 'uid' 
 	);
