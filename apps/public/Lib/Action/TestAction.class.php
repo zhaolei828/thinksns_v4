@@ -941,9 +941,12 @@ class TestAction extends Action{
 	}
         
         public function imgurl(){
+            $site_url = 'http://6jlife.com/app/poster/1/[sid]';
+            $site_url = preg_replace('\/\[[a-zA-Z]+\]','',$site_url);
+            echo $site_url;
 //            require_once SITE_PATH.'/addons/library/CurlDowload.class.php';
 //            $params['file_url'] = 'http://demo.thinksns.com/ts4/data/upload/2015/0803/18/55bf45248f2bd.jpg';
-            Addons::addonsHook('SinaWeiboFavoritesImport', 'test');
+            //Addons::addonsHook('SinaWeiboFavoritesImport', 'test');
 //            echo '==================================================';
 //            echo '<pre>';print_r($options);echo '</pre>';
 //            $c = new CurlDowload($options['max_size'], $options['allow_exts'], $options['allow_types']);

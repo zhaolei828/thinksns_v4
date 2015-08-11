@@ -733,7 +733,6 @@ function U($url,$params=false,$redirect=false) {
 
 			//填充附加参数
 			if($params){
-
 				//解析替换URL中的参数
 				parse_str($params,$r);
 				foreach($r as $k=>$v){
@@ -748,8 +747,8 @@ function U($url,$params=false,$redirect=false) {
 				if(isset($lr) && is_array($lr) && count($lr)>0){
 					$site_url   .=  '?'.http_build_query($lr);
 				}
-
-			}
+                        }
+                        $site_url = preg_replace('/\/\[(.*)\]/i','',$site_url);
 		}
 	}
 

@@ -115,12 +115,12 @@ return array(
 		'gift/Index/personal'		=>	SITE_URL.'/app/gift/[uid]',
 
 		// 招贴版
-		'poster/Index/index'		=>	SITE_URL.'/app/poster/[pid]',
-		'poster/Index/personal'		=>	SITE_URL.'/app/poster/posters',
-		'poster/Index/addPosterSort'=>	SITE_URL.'/app/poster/post',
-		'poster/Index/addPoster'	=>	SITE_URL.'/app/poster/post/[typeId]',
-		'poster/Index/editPoster'	=>	SITE_URL.'/app/poster/edit/[id]',
-		'poster/Index/posterDetail'	=>	SITE_URL.'/app/poster/detail/[id]',
+		'poster/Index/index'		=>	SITE_URL.'/poster/[pid]/[stid]/[order]',
+		'poster/Index/personal'		=>	SITE_URL.'/poster/my/[pid]/[stid]',
+		'poster/Index/addPosterSort'    =>	SITE_URL.'/poster/post',
+		'poster/Index/addPoster'	=>	SITE_URL.'/poster/post/[typeId]',
+		'poster/Index/editPoster'	=>	SITE_URL.'/poster/edit/[id]',
+		'poster/Index/posterDetail'	=>	SITE_URL.'/poster/detail/[id]',
 		
 		// 群组
 		'group/Index/index'			=>	SITE_URL.'/app/group',
